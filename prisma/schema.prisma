@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Shipment {
+  id              String   @id @default(cuid())
+  blNumber        String   @unique
+  containerNumber String?
+  shipper         String
+  consignee       String
+  commodity       String?
+  originPort      String
+  destinationPort String
+  vesselName      String?
+  voyageNumber    String?
+  etd             DateTime?
+  eta             DateTime?
+  currentStatus   String   @default("Booking Confirmed")
+  milestones      String   @default("[]")
+  notes           String?
+  weight          String?
+  volume          String?
+  packages        Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SeoMeta {
+  id          String  @id @default(cuid())
+  route       String  @unique
+  title       String
+  description String
+  keywords    String
+  canonical   String?
+  ogImage     String?
+  robots      String  @default("index, follow")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  type      String
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  origin    String?
+  dest      String?
+  cargo     String?
+  shipType  String?
+  weight    String?
+  message   String?
+  status    String   @default("New")
+  createdAt DateTime @default(now())
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id                    String  @id @default(cuid())
+  googleVerification    String?
+  analyticsId           String?
+  maintenanceMode       Boolean @default(false)
+  announcementBanner    String?
+  announcementEnabled   Boolean @default(false)
+}
+
+model BookingToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  status    String    @default("Unused")
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  usedAt    DateTime?
+  notes     String?
+  booking   Booking?
+}
+
+model VoyageReference {
+  id        String    @id @default(cuid())
+  voyageRef String    @unique
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+}
+
+model Port {
+  id        String   @id @default(cuid())
+  portCode  String   @unique
+  portName  String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model BookingCounter {
+  id      Int @id @default(1)
+  current Int @default(0)
+}
+
+model Booking {
+  id                 String             @id @default(cuid())
+  confirmationNumber String             @unique
+  tokenId            String             @unique
+  token              BookingToken       @relation(fields: [tokenId], references: [id])
+  voyageReferenceId  String
+  voyageReference    VoyageReference    @relation(fields: [voyageReferenceId], references: [id])
+  rotationNumber     String
+  bookingParty       String
+  bookingPartyEmail  String
+  status             String             @default("Confirmed")
+  containers         BookingContainer[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+model BookingContainer {
+  id              String   @id @default(cuid())
+  bookingId       String
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  sortOrder       Int      @default(0)
+  pol             String
+  pod             String
+  line            String?
+  containerNumber String
+  chk             String?
+  iso             String
+  podAgentName    String?
+  email           String?
+  mub             String?
+  imco            String?
+  unMo            String?
+  temperature     String?
+  vgmWeight       Float?
+  uom             String   @default("KG")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
