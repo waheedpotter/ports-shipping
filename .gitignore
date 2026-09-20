@@ -32,11 +32,16 @@ yarn-error.log*
 /data/*.db-journal
 /data/*.db-shm
 /data/*.db-wal
+/prisma/data/
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Allow pre-seeded starter database
+!prisma/dev.db
 
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
-*.db
-*.db-journal
-*.db-shm
-*.db-wal
+.vercel
+

@@ -27,36 +27,41 @@ export async function GET(req: NextRequest) {
   const admin = await requireAdmin(req);
   if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get('search')?.trim() ?? '';
-  const statusFilter = searchParams.get('status')?.trim() ?? '';
+  try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get('search')?.trim() ?? '';
+    const statusFilter = searchParams.get('status')?.trim() ?? '';
 
-  const where: Record<string, unknown> = {};
-  if (search) {
-    where.OR = [
-      { token: { contains: search } },
-      { notes: { contains: search } },
-    ];
-  }
-  if (statusFilter) {
-    where.status = statusFilter;
-  }
+    const where: Record<string, unknown> = {};
+    if (search) {
+      where.OR = [
+        { token: { contains: search } },
+        { notes: { contains: search } },
+      ];
+    }
+    if (statusFilter) {
+      where.status = statusFilter;
+    }
 
-  const tokens = await prisma.bookingToken.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-    include: {
-      booking: {
-        select: {
-          confirmationNumber: true,
-          bookingParty: true,
-          createdAt: true,
+    const tokens = await prisma.bookingToken.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        booking: {
+          select: {
+            confirmationNumber: true,
+            bookingParty: true,
+            createdAt: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return NextResponse.json(tokens);
+    return NextResponse.json(tokens);
+  } catch (error: any) {
+    console.error('Admin tokens fetch error:', error);
+    return NextResponse.json({ error: error?.message || 'Failed to fetch tokens' }, { status: 500 });
+  }
 }
 
 // ─── POST /api/admin/booking-tokens ──────────────────────────────────────────
