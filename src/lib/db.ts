@@ -3,12 +3,14 @@ import { ensureDatabaseReady } from './init-db';
 import path from 'path';
 import fs from 'fs';
 
-// Ensure data folder exists for SQLite
-const dataDir = path.join(process.cwd(), 'data');
+// On Vercel: use /tmp (writable). On GoDaddy: use ./data/
+const isVercel = !!process.env.VERCEL;
+const dataDir = isVercel
+  ? '/tmp'
+  : path.join(process.cwd(), 'data');
+
 if (!fs.existsSync(dataDir)) {
-  try {
-    fs.mkdirSync(dataDir, { recursive: true });
-  } catch {}
+  try { fs.mkdirSync(dataDir, { recursive: true }); } catch {}
 }
 
 if (!process.env.DATABASE_URL) {
