@@ -2,22 +2,25 @@ import { SignJWT, jwtVerify } from 'jose';
 import bcrypt from 'bcryptjs';
 
 export const ADMIN_COOKIE = 'admin_token';
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
-const secretKey = new TextEncoder().encode(JWT_SECRET);
 
-export async function signJWT(payload: object, expiresIn: string = '24h'): Promise<string> {
+function getJWTSecret() {
+  const secret = process.env.JWT_SECRET || 'ports-shipping-jwt-secret-2026-godaddy';
+  return new TextEncoder().encode(secret);
+}
+
+export async function signJWT(payload: object, expiresIn: string = '7d'): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(expiresIn)
-    .sign(secretKey);
+    .sign(getJWTSecret());
 }
 
 export async function verifyJWT(token: string): Promise<{ valid: boolean; payload?: any }> {
   try {
-    const { payload } = await jwtVerify(token, secretKey);
+    const { payload } = await jwtVerify(token, getJWTSecret());
     return { valid: true, payload };
-  } catch (error) {
+  } catch {
     return { valid: false };
   }
 }
@@ -31,14 +34,30 @@ export async function comparePassword(password: string, hash: string): Promise<b
   return bcrypt.compare(password, hash);
 }
 
+/**
+ * Robust admin JWT extraction — works on GoDaddy Phusion Passenger.
+ * Reads cookie from: 1) next/headers cookies(), 2) raw Cookie header from request
+ */
 export async function getAdminSession(request: Request): Promise<{ valid: boolean; session?: any }> {
-  const cookieHeader = request.headers.get('cookie');
-  if (!cookieHeader) return { valid: false };
-  
-  const cookies = cookieHeader.split(';').map(c => c.trim());
-  const tokenCookie = cookies.find(c => c.startsWith(`${ADMIN_COOKIE}=`));
-  if (!tokenCookie) return { valid: false };
-  
-  const token = tokenCookie.split('=')[1];
-  return verifyJWT(token);
+  // Method 1: raw Cookie header (most reliable on Phusion Passenger)
+  const cookieHeader = request.headers.get('cookie') || '';
+  if (cookieHeader) {
+    const match = cookieHeader.split(';').map(c => c.trim()).find(c => c.startsWith(`${ADMIN_COOKIE}=`));
+    if (match) {
+      const token = match.split('=').slice(1).join('=');
+      if (token) {
+        const result = await verifyJWT(token);
+        if (result.valid) return { valid: true, session: result.payload };
+      }
+    }
+  }
+  return { valid: false };
+}
+
+/**
+ * Use this in API Route Handlers (App Router).
+ * Reads the JWT from the raw request Cookie header (reliable on GoDaddy).
+ */
+export async function requireAdminFromRequest(request: Request): Promise<{ valid: boolean; session?: any }> {
+  return getAdminSession(request);
 }

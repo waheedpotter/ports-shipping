@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { verifyJWT, ADMIN_COOKIE } from '@/lib/auth';
 import { generateBookingToken } from '@/lib/tokens';
 
 // ─── Auth helper ─────────────────────────────────────────────────────────────
-async function requireAdmin() {
-  const token = cookies().get(ADMIN_COOKIE)?.value;
+async function requireAdmin(request: Request) {
+  const cookieHeader = request.headers.get('cookie') || '';
+  const match = cookieHeader.split(';').map((c: string) => c.trim()).find((c: string) => c.startsWith(`${ADMIN_COOKIE}=`));
+  if (!match) return null;
+  const token = match.split('=').slice(1).join('=');
   if (!token) return null;
   const decoded = await verifyJWT(token);
   return decoded.valid ? decoded : null;
@@ -21,7 +24,7 @@ const CreateTokenSchema = z.object({
 
 // ─── GET /api/admin/booking-tokens ───────────────────────────────────────────
 export async function GET(req: NextRequest) {
-  const admin = await requireAdmin();
+  const admin = await requireAdmin(req);
   if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
@@ -58,7 +61,7 @@ export async function GET(req: NextRequest) {
 
 // ─── POST /api/admin/booking-tokens ──────────────────────────────────────────
 export async function POST(req: NextRequest) {
-  const admin = await requireAdmin();
+  const admin = await requireAdmin(req);
   if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   let body: unknown;

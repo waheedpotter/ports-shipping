@@ -1,18 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { verifyJWT, ADMIN_COOKIE } from '@/lib/auth';
-import { cookies } from 'next/headers';
+
 import * as XLSX from 'xlsx';
 
-async function requireAdmin() {
-  const token = cookies().get(ADMIN_COOKIE)?.value;
+async function requireAdmin(request: Request) {
+  const cookieHeader = request.headers.get('cookie') || '';
+  const match = cookieHeader.split(';').map((c: string) => c.trim()).find((c: string) => c.startsWith(`${ADMIN_COOKIE}=`));
+  if (!match) return null;
+  const token = match.split('=').slice(1).join('=');
   if (!token) return null;
   const decoded = await verifyJWT(token);
   return decoded.valid ? decoded : null;
 }
 
 export async function GET(request: Request) {
-  if (!await requireAdmin()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!await requireAdmin(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
