@@ -1,8 +1,15 @@
 // Phusion Passenger / GoDaddy cPanel Node.js entry point
 // This wraps Next.js standalone server for deployment
 
+try {
+  require('dotenv').config();
+} catch (e) {
+  // dotenv optional if environment variables are set in cPanel
+}
+
 const { createServer } = require('http');
 const { parse } = require('url');
+
 const next = require('./.next/standalone/node_modules/next/dist/server/next.js');
 const path = require('path');
 
