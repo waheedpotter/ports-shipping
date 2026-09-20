@@ -1,92 +1,108 @@
-// Phusion Passenger / GoDaddy cPanel Node.js entry point
+/**
+ * Ports Shipping LLC — GoDaddy Node.js Application Manager Entry Point
+ * Supports Phusion Passenger deployment.
+ * Auto-builds the Next.js app if .next directory is missing.
+ */
 
 'use strict';
 
-try { require('dotenv').config(); } catch (e) {}
-
+const { execSync, spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-// ─── Auto-set DATABASE_URL if not configured in cPanel ───────────────────────
-if (!process.env.DATABASE_URL) {
-  const dataDir = path.join(__dirname, 'data');
-  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  process.env.DATABASE_URL = 'file:' + path.join(dataDir, 'ports_shipping.db');
-  console.log('[server] DATABASE_URL auto-set:', process.env.DATABASE_URL);
+// ─── Load .env if present ─────────────────────────────────────────────────────
+try { require('dotenv').config({ path: path.join(__dirname, '.env.local') }); } catch (e) {}
+try { require('dotenv').config({ path: path.join(__dirname, '.env') }); } catch (e) {}
+
+// ─── Set default environment variables ───────────────────────────────────────
+const dataDir = path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) {
+  try { fs.mkdirSync(dataDir, { recursive: true }); } catch (e) {}
 }
 
-// ─── Auto-set default credentials if not configured in cPanel ────────────────
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'file:' + path.join(dataDir, 'ports_shipping.db');
+  console.log('[startup] DATABASE_URL =', process.env.DATABASE_URL);
+}
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'ports-shipping-jwt-secret-2026-godaddy';
-  console.log('[server] JWT_SECRET auto-set (default)');
 }
 if (!process.env.ADMIN_USERNAME) process.env.ADMIN_USERNAME = 'admin';
 if (!process.env.ADMIN_PASSWORD) process.env.ADMIN_PASSWORD = 'ports@2026!secure';
+if (!process.env.NEXT_PUBLIC_SITE_URL) {
+  process.env.NEXT_PUBLIC_SITE_URL = 'https://ports-shipping.com';
+}
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
-// ─── Run Prisma migrate deploy on startup ────────────────────────────────────
-const { execSync } = require('child_process');
+// ─── Run Prisma migrate ───────────────────────────────────────────────────────
+console.log('[startup] Running prisma migrate deploy...');
 try {
-  console.log('[server] Running prisma migrate deploy...');
   execSync('npx prisma migrate deploy', {
     cwd: __dirname,
     env: { ...process.env },
-    stdio: 'pipe',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 120000,
   });
-  console.log('[server] Prisma migration complete.');
+  console.log('[startup] Prisma migration: OK');
 } catch (err) {
-  console.warn('[server] Prisma migrate warning (may be OK if already migrated):', err.stderr?.toString() || err.message);
-}
-
-// ─── Start Next.js ────────────────────────────────────────────────────────────
-const { createServer } = require('http');
-const { parse } = require('url');
-
-const port = parseInt(process.env.PORT || '3000', 10);
-const hostname = process.env.HOSTNAME || '0.0.0.0';
-const dev = false;
-
-let nextApp;
-try {
-  // Try standalone mode first (next build output: 'standalone')
-  const nextPath = path.join(__dirname, '.next', 'standalone', 'server.js');
-  if (fs.existsSync(nextPath)) {
-    console.log('[server] Starting in standalone mode...');
-    // Copy static files if not already done
-    const publicSrc = path.join(__dirname, 'public');
-    const publicDst = path.join(__dirname, '.next', 'standalone', 'public');
-    if (fs.existsSync(publicSrc) && !fs.existsSync(publicDst)) {
-      fs.cpSync(publicSrc, publicDst, { recursive: true });
-    }
-    const staticSrc = path.join(__dirname, '.next', 'static');
-    const staticDst = path.join(__dirname, '.next', 'standalone', '.next', 'static');
-    if (fs.existsSync(staticSrc) && !fs.existsSync(staticDst)) {
-      fs.cpSync(staticSrc, staticDst, { recursive: true });
-    }
-    require(nextPath);
-    process.exit(0); // Let standalone server.js take over
+  const msg = (err.stderr || err.stdout || '').toString();
+  // "already applied" is not an error
+  if (!msg.includes('No pending migrations') && !msg.includes('already applied')) {
+    console.warn('[startup] Prisma migrate warning:', msg.slice(0, 300));
+  } else {
+    console.log('[startup] Prisma migration: already up to date');
   }
-} catch (e) {
-  console.log('[server] Falling back to next() API mode:', e.message);
 }
 
-// Fallback: Use Next.js programmatic API
-const next = require('next');
-nextApp = next({ dev, hostname, port, dir: __dirname });
-const handle = nextApp.getRequestHandler();
+// ─── Auto-build Next.js if .next is missing ──────────────────────────────────
+const nextDir = path.join(__dirname, '.next');
+const buildRequired = !fs.existsSync(nextDir) || !fs.existsSync(path.join(nextDir, 'BUILD_ID'));
 
-nextApp.prepare().then(() => {
-  createServer(async (req, res) => {
-    try {
-      const parsedUrl = parse(req.url, true);
-      await handle(req, res, parsedUrl);
-    } catch (err) {
-      console.error('Error handling', req.url, err);
-      res.statusCode = 500;
-      res.end('internal server error');
-    }
-  }).listen(port, hostname, () => {
-    console.log(`> Ports Shipping ready on http://${hostname}:${port}`);
-    console.log(`> Environment: ${process.env.NODE_ENV}`);
-    console.log(`> DATABASE_URL: ${process.env.DATABASE_URL}`);
-  });
+if (buildRequired) {
+  console.log('[startup] .next directory not found — running npm run build...');
+  console.log('[startup] This may take 2-5 minutes on first deploy. Please wait...');
+  try {
+    execSync('npm run build', {
+      cwd: __dirname,
+      env: { ...process.env },
+      stdio: 'inherit',
+      timeout: 300000, // 5 minutes
+    });
+    console.log('[startup] Build complete!');
+  } catch (err) {
+    console.error('[startup] BUILD FAILED:', err.message);
+    process.exit(1);
+  }
+} else {
+  console.log('[startup] .next directory found — skipping build.');
+}
+
+// ─── Start Next.js production server ─────────────────────────────────────────
+const port = process.env.PORT || 3000;
+const hostname = process.env.HOSTNAME || '0.0.0.0';
+
+console.log(`[startup] Starting Next.js on ${hostname}:${port}...`);
+
+// Use next start (standard production server)
+const nextBin = path.join(__dirname, 'node_modules', '.bin', 'next');
+const args = ['start', '--port', String(port), '--hostname', hostname];
+
+const child = spawn(nextBin, args, {
+  cwd: __dirname,
+  env: { ...process.env },
+  stdio: 'inherit',
 });
+
+child.on('exit', (code) => {
+  console.log('[startup] Next.js process exited with code:', code);
+  process.exit(code || 0);
+});
+
+child.on('error', (err) => {
+  console.error('[startup] Failed to start Next.js:', err);
+  process.exit(1);
+});
+
+// Forward signals to child
+process.on('SIGTERM', () => { child.kill('SIGTERM'); });
+process.on('SIGINT', () => { child.kill('SIGINT'); });

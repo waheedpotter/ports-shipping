@@ -10,8 +10,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:seed": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed-booking.ts",
     "db:studio": "prisma studio",
-    "lint": "next lint",
-    "deploy:godaddy": "prisma generate && prisma migrate deploy && node -e \"const { PrismaClient } = require('@prisma/client'); const p = new PrismaClient(); p.$connect().then(() => { console.log('DB connected OK'); return p.$disconnect(); }).catch(e => { console.error('DB error:', e); process.exit(1); });\""
+    "lint": "next lint"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
