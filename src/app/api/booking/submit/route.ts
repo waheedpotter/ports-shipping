@@ -85,7 +85,7 @@ export async function POST(request: Request) {
             })),
           },
         },
-        include: { containers: { orderBy: { sortOrder: 'asc' } }, voyageReference: true },
+        include: { containers: { orderBy: { sortOrder: 'asc' } }, voyageReference: true, token: true },
       });
 
       // Mark token as used
@@ -97,14 +97,27 @@ export async function POST(request: Request) {
       return newBooking;
     });
 
-    // Send emails asynchronously (fire-and-forget)
-    sendBookingConfirmation(booking, booking.containers, booking.voyageReference).catch((err) =>
+    // Send emails asynchronously with token number included (fire-and-forget)
+    sendBookingConfirmation(
+      {
+        confirmationNumber: booking.confirmationNumber,
+        token: booking.token?.token,
+        bookingParty: booking.bookingParty,
+        bookingPartyEmail: booking.bookingPartyEmail,
+        rotationNumber: booking.rotationNumber,
+        status: booking.status,
+        createdAt: booking.createdAt,
+      },
+      booking.containers,
+      booking.voyageReference,
+    ).catch((err) =>
       console.error('Email send failed (non-fatal):', err)
     );
 
     return NextResponse.json({
       success: true,
       confirmationNumber: booking.confirmationNumber,
+      token: booking.token?.token || '',
       bookingId: booking.id,
       createdAt: booking.createdAt,
     });

@@ -57,17 +57,34 @@ export async function GET(request: Request) {
   const rows: any[] = [];
   for (const booking of bookings) {
     const baseRow = {
-      'Booking No.': booking.confirmationNumber,
+      'Booking Confirmation No.': booking.confirmationNumber,
+      'Token Number': booking.token?.token || '—',
+      'Booking Party (Client)': booking.bookingParty,
+      'Client Email': booking.bookingPartyEmail,
       'Booking Date': new Date(booking.createdAt).toLocaleString('en-AE', { timeZone: 'Asia/Dubai' }),
-      'Voyage Ref': booking.voyageReference.voyageRef,
+      'Voyage Ref': booking.voyageReference?.voyageRef || '—',
       'Rotation No.': booking.rotationNumber,
-      'Booking Party': booking.bookingParty,
-      'Booking Party Email': booking.bookingPartyEmail,
-      'Token': booking.token.token,
       'Status': booking.status,
     };
     if (booking.containers.length === 0) {
-      rows.push({ ...baseRow, 'Container #': '', 'POL': '', 'POD': '', 'Line': '', 'Container No.': '', 'CHK': '', 'ISO': '', 'POD Agent': '', 'Container Email': '', 'MUB': '', 'IMCO': '', 'UN MO': '', 'Temp': '', 'VGM WT': '', 'UOM': '' });
+      rows.push({
+        ...baseRow,
+        'Container #': '',
+        'POL': '',
+        'POD': '',
+        'Line': '',
+        'Container No.': '',
+        'CHK': '',
+        'ISO': '',
+        'POD Agent': '',
+        'Container Email': '',
+        'MUB': '',
+        'IMCO': '',
+        'UN MO': '',
+        'Temp': '',
+        'VGM WT': '',
+        'UOM': '',
+      });
     } else {
       booking.containers.forEach((c, i) => {
         rows.push({

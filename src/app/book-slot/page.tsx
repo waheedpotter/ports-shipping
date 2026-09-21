@@ -961,10 +961,16 @@ function StepConfirmed({
             <p className="text-sm text-gray-500">Booking Confirmation</p>
           </div>
 
-          {/* Confirmation Number */}
-          <div className="text-center py-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-[#C9A84C]/30 mb-6">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Booking Confirmation Number</p>
-            <p className="text-3xl sm:text-4xl font-black text-[#C9A84C] tracking-wider">{confirmation.confirmationNumber}</p>
+          {/* Confirmation Number & Token Number Banner */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-5 px-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-[#C9A84C]/40 mb-6 text-center">
+            <div className="border-b sm:border-b-0 sm:border-r border-[#C9A84C]/30 pb-3 sm:pb-0 sm:pr-4">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Booking Confirmation No.</p>
+              <p className="text-2xl sm:text-3xl font-black text-[#8B0000] tracking-wider">{confirmation.confirmationNumber}</p>
+            </div>
+            <div className="pt-2 sm:pt-0 sm:pl-4">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Booking Token / Ref</p>
+              <p className="text-xl sm:text-2xl font-black text-[#C9A84C] font-mono tracking-wider">{data.verifiedToken || '—'}</p>
+            </div>
           </div>
 
           {/* Details grid */}
@@ -978,8 +984,16 @@ function StepConfirmed({
               <p className="font-bold text-gray-800 mt-0.5">{data.rotationNumber}</p>
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Booking Party</p>
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Booking Party (Client)</p>
               <p className="font-bold text-gray-800 mt-0.5">{data.bookingParty}</p>
+            </div>
+            <div className="col-span-2 sm:col-span-1">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Booking Token</p>
+              <p className="font-bold text-[#C9A84C] font-mono mt-0.5">{data.verifiedToken}</p>
+            </div>
+            <div className="col-span-2 sm:col-span-1">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Client Email</p>
+              <p className="font-bold text-gray-800 mt-0.5">{data.bookingPartyEmail}</p>
             </div>
             <div className="col-span-2 sm:col-span-1">
               <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Containers</p>

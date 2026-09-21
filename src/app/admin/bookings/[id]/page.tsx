@@ -154,125 +154,158 @@ export default function BookingDetailPage() {
 
       <div className="max-w-5xl mx-auto space-y-6 print-full">
         {/* ── Header ── */}
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-3xl font-bold text-gray-900 font-mono">{booking.confirmationNo}</h1>
-              <StatusBadge status={booking.status} />
-            </div>
-            <p className="text-gray-500 text-sm mt-1">
-              Submitted on {new Date(booking.createdAt).toLocaleString()}
-            </p>
-          </div>
-          <div className="flex gap-2 no-print flex-wrap">
-            <button
-              onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition"
-            >
-              ← Back
-            </button>
-            <button
-              onClick={() => window.print()}
-              className="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition"
-            >
-              🖨 Print
-            </button>
-            <button
-              onClick={() => window.open(`/api/admin/bookings/export?id=${booking.id}`, '_blank')}
-              className="px-4 py-2 bg-[#C9A84C] text-white rounded-lg text-sm font-semibold hover:bg-yellow-600 transition"
-            >
-              ⬇ Download Excel
-            </button>
-          </div>
-        </div>
+        {(() => {
+          const confNo = (booking as any).confirmationNumber || booking.confirmationNo;
+          const tokenObj = (booking as any).token || booking.bookingToken;
+          const voyage = (booking as any).voyageReference?.voyageRef || booking.voyageRef?.voyageRef;
+          const rotNo = (booking as any).rotationNumber || booking.rotationNo;
+          const clientEmail = (booking as any).bookingPartyEmail || booking.email;
+          const containers = booking.containers || [];
 
-        {/* ── Voyage Information ── */}
-        <SectionCard title="Voyage Information">
-          <dl className="grid grid-cols-2 md:grid-cols-3 gap-5">
-            <InfoField label="Voyage Reference" value={booking.voyageRef?.voyageRef} />
-            <InfoField label="Rotation Number" value={booking.rotationNo} />
-          </dl>
-        </SectionCard>
-
-        {/* ── Booking Party ── */}
-        <SectionCard title="Booking Party">
-          <dl className="grid grid-cols-2 md:grid-cols-3 gap-5">
-            <InfoField label="Company / Name" value={booking.bookingParty} />
-            <InfoField label="Email Address" value={booking.email} />
-          </dl>
-        </SectionCard>
-
-        {/* ── Container Details ── */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-            Container Details
-            <span className="bg-[#C9A84C]/20 text-[#8B0000] text-sm font-semibold px-2 py-0.5 rounded-full">
-              {booking.containers.length}
-            </span>
-          </h2>
-          {booking.containers.length === 0 ? (
-            <p className="text-gray-400 italic text-sm">No containers listed.</p>
-          ) : (
-            booking.containers
-              .sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0))
-              .map((c, idx) => (
-                <div key={c.id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                  <div className="px-5 py-3 bg-[#8B0000] flex items-center gap-2">
-                    <span className="text-white font-bold text-sm">Container #{idx + 1}</span>
-                    {c.containerNo && (
-                      <span className="text-[#C9A84C] font-mono text-sm font-semibold ml-2">{c.containerNo}</span>
+          return (
+            <>
+              <div className="flex items-start justify-between flex-wrap gap-4">
+                <div>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h1 className="text-3xl font-bold text-gray-900 font-mono">{confNo}</h1>
+                    <StatusBadge status={booking.status} />
+                    {tokenObj?.token && (
+                      <span className="font-mono font-bold text-sm bg-amber-50 text-[#8B0000] border border-[#C9A84C]/60 px-3 py-1 rounded-lg">
+                        Token: {tokenObj.token}
+                      </span>
                     )}
                   </div>
-                  <div className="p-5">
-                    <dl className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                      <InfoField label="POL" value={c.pol} />
-                      <InfoField label="POD" value={c.pod} />
-                      <InfoField label="Line" value={c.line} />
-                      <InfoField label="Container No" value={c.containerNo} />
-                      <InfoField label="CHK" value={c.chk} />
-                      <InfoField label="ISO" value={c.iso} />
-                      <InfoField label="POD Agent" value={c.podAgent} />
-                      <InfoField label="Agent Email" value={c.podAgentEmail} />
-                      <InfoField label="MUB" value={c.mub} />
-                      <InfoField label="IMCO" value={c.imco} />
-                      <InfoField label="UN MO" value={c.unMo} />
-                      <InfoField label="Temp" value={c.temp} />
-                      <InfoField label="VGM WT" value={c.vgmWt} />
-                      <InfoField label="UOM" value={c.uom} />
-                    </dl>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Submitted on {new Date(booking.createdAt).toLocaleString()}
+                  </p>
+                </div>
+                <div className="flex gap-2 no-print flex-wrap">
+                  <button
+                    onClick={() => router.back()}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition"
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    onClick={() => window.print()}
+                    className="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition"
+                  >
+                    🖨 Print
+                  </button>
+                  <button
+                    onClick={() => window.open(`/api/admin/bookings/export?id=${booking.id}`, '_blank')}
+                    className="px-4 py-2 bg-[#C9A84C] text-white rounded-lg text-sm font-semibold hover:bg-yellow-600 transition"
+                  >
+                    ⬇ Download Excel
+                  </button>
+                </div>
+              </div>
+
+              {/* ── Token Information Banner ── */}
+              {tokenObj && (
+                <div className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-[#C9A84C]/50 rounded-xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-[#8B0000] text-[#C9A84C] flex items-center justify-center font-bold text-lg">
+                      🔑
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Booking Token Reference</p>
+                      <p className="text-xl font-mono font-black text-[#8B0000]">{tokenObj.token}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 flex-wrap text-sm">
+                    <div>
+                      <span className="text-xs text-gray-400 block font-semibold uppercase">Token Status</span>
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${tokenStatusColor[tokenObj.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                        {tokenObj.status}
+                      </span>
+                    </div>
+                    {tokenObj.createdAt && (
+                      <div>
+                        <span className="text-xs text-gray-400 block font-semibold uppercase">Generated</span>
+                        <span className="text-gray-700 font-medium">{new Date(tokenObj.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    )}
+                    {tokenObj.usedAt && (
+                      <div>
+                        <span className="text-xs text-gray-400 block font-semibold uppercase">Used At</span>
+                        <span className="text-gray-700 font-medium">{new Date(tokenObj.usedAt).toLocaleString()}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))
-          )}
-        </div>
+              )}
 
-        {/* ── Token Information ── */}
-        {booking.bookingToken && (
-          <SectionCard title="Token Information">
-            <dl className="grid grid-cols-2 md:grid-cols-4 gap-5">
-              <div>
-                <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Token Ref</dt>
-                <dd className="mt-1 font-mono text-sm font-bold text-[#8B0000]">{booking.bookingToken.token}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</dt>
-                <dd className="mt-1">
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${tokenStatusColor[booking.bookingToken.status] ?? 'bg-gray-100 text-gray-600'}`}>
-                    {booking.bookingToken.status}
+              {/* ── Voyage Information ── */}
+              <SectionCard title="Voyage Information">
+                <dl className="grid grid-cols-2 md:grid-cols-3 gap-5">
+                  <InfoField label="Voyage Reference" value={voyage} />
+                  <InfoField label="Rotation Number" value={rotNo} />
+                </dl>
+              </SectionCard>
+
+              {/* ── Booking Party ── */}
+              <SectionCard title="Booking Party (Client)">
+                <dl className="grid grid-cols-2 md:grid-cols-3 gap-5">
+                  <InfoField label="Company / Client Name" value={booking.bookingParty} />
+                  <InfoField label="Client Email Address" value={clientEmail} />
+                  <InfoField label="Assigned Token" value={tokenObj?.token} />
+                </dl>
+              </SectionCard>
+
+              {/* ── Container Details ── */}
+              <div className="space-y-4">
+                <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                  Container Details
+                  <span className="bg-[#C9A84C]/20 text-[#8B0000] text-sm font-semibold px-2 py-0.5 rounded-full">
+                    {containers.length}
                   </span>
-                </dd>
+                </h2>
+                {containers.length === 0 ? (
+                  <p className="text-gray-400 italic text-sm">No containers listed.</p>
+                ) : (
+                  containers
+                    .sort((a, b) => (a.seq ?? (a as any).sortOrder ?? 0) - (b.seq ?? (a as any).sortOrder ?? 0))
+                    .map((c, idx) => {
+                      const cNo = c.containerNo || (c as any).containerNumber;
+                      const pAgent = c.podAgent || (c as any).podAgentName;
+                      const pAgentEmail = c.podAgentEmail || (c as any).email;
+                      const weight = c.vgmWt || (c as any).vgmWeight;
+
+                      return (
+                        <div key={c.id || idx} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                          <div className="px-5 py-3 bg-[#8B0000] flex items-center gap-2">
+                            <span className="text-white font-bold text-sm">Container #{idx + 1}</span>
+                            {cNo && (
+                              <span className="text-[#C9A84C] font-mono text-sm font-semibold ml-2">{cNo}</span>
+                            )}
+                          </div>
+                          <div className="p-5">
+                            <dl className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                              <InfoField label="POL" value={c.pol} />
+                              <InfoField label="POD" value={c.pod} />
+                              <InfoField label="Line" value={c.line} />
+                              <InfoField label="Container No" value={cNo} />
+                              <InfoField label="CHK" value={c.chk} />
+                              <InfoField label="ISO" value={c.iso} />
+                              <InfoField label="POD Agent" value={pAgent} />
+                              <InfoField label="Agent Email" value={pAgentEmail} />
+                              <InfoField label="MUB" value={c.mub} />
+                              <InfoField label="IMCO" value={c.imco} />
+                              <InfoField label="UN MO" value={c.unMo} />
+                              <InfoField label="Temp" value={c.temp || (c as any).temperature} />
+                              <InfoField label="VGM WT" value={weight != null ? String(weight) : undefined} />
+                              <InfoField label="UOM" value={c.uom} />
+                            </dl>
+                          </div>
+                        </div>
+                      );
+                    })
+                )}
               </div>
-              <InfoField
-                label="Token Created"
-                value={new Date(booking.bookingToken.createdAt).toLocaleString()}
-              />
-              <InfoField
-                label="Used Date"
-                value={booking.bookingToken.usedAt ? new Date(booking.bookingToken.usedAt).toLocaleString() : undefined}
-              />
-            </dl>
-          </SectionCard>
-        )}
+            </>
+          );
+        })()}
 
         {/* ── System Info ── */}
         <SectionCard title="System Information">

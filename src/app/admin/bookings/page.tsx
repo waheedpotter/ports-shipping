@@ -359,26 +359,32 @@ export default function BookingsPage() {
                     className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-amber-50 transition-colors`}
                   >
                     <td className="px-4 py-3 font-mono text-[#8B0000] font-semibold whitespace-nowrap">
-                      {b.confirmationNo}
+                      {(b as any).confirmationNumber || b.confirmationNo}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-gray-600">
                       {new Date(b.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      {b.voyageRef?.voyageRef ?? <span className="text-gray-400">—</span>}
+                      {(b as any).voyageReference?.voyageRef ?? b.voyageRef?.voyageRef ?? <span className="text-gray-400">—</span>}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-gray-600">
-                      {b.rotationNo ?? <span className="text-gray-400">—</span>}
+                      {(b as any).rotationNumber ?? b.rotationNo ?? <span className="text-gray-400">—</span>}
                     </td>
                     <td className="px-4 py-3 font-medium">{b.bookingParty}</td>
-                    <td className="px-4 py-3 text-gray-600 max-w-[160px] truncate">{b.email}</td>
+                    <td className="px-4 py-3 text-gray-600 max-w-[160px] truncate">{(b as any).bookingPartyEmail || b.email}</td>
                     <td className="px-4 py-3 text-center">
                       <span className="bg-[#C9A84C]/20 text-[#8B0000] font-semibold px-2 py-0.5 rounded-full text-xs">
-                        {b.containers?.length ?? 0}
+                        {(b as any)._count?.containers ?? b.containers?.length ?? 0}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-500 whitespace-nowrap">
-                      {b.bookingToken?.token ?? <span className="text-gray-300">—</span>}
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {((b as any).token?.token || b.bookingToken?.token) ? (
+                        <span className="font-mono font-bold text-xs bg-amber-50 text-[#8B0000] border border-[#C9A84C]/50 px-2 py-1 rounded">
+                          {(b as any).token?.token || b.bookingToken?.token}
+                        </span>
+                      ) : (
+                        <span className="text-gray-300">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <StatusBadge status={b.status} />

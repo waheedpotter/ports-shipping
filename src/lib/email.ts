@@ -6,6 +6,7 @@ import nodemailer from 'nodemailer';
 
 interface BookingData {
   confirmationNumber: string;
+  token?: string | null;
   bookingParty: string;
   bookingPartyEmail: string;
   rotationNumber: string;
@@ -133,11 +134,15 @@ function buildEmailHtml(
 
           <!-- Confirmation Banner -->
           <tr>
-            <td style="background:#C9A84C;padding:12px 32px;">
+            <td style="background:#C9A84C;padding:14px 32px;">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="color:#8B0000;font-size:15px;font-weight:700;">Confirmation No:</td>
+                  <td style="color:#8B0000;font-size:14px;font-weight:700;">Confirmation No:</td>
                   <td align="right" style="color:#8B0000;font-size:20px;font-weight:700;letter-spacing:2px;">${booking.confirmationNumber}</td>
+                </tr>
+                <tr>
+                  <td style="color:#8B0000;font-size:13px;font-weight:700;padding-top:4px;">Booking Token / Ref:</td>
+                  <td align="right" style="color:#8B0000;font-size:16px;font-weight:700;letter-spacing:1px;padding-top:4px;font-family:monospace;">${booking.token ?? '—'}</td>
                 </tr>
               </table>
             </td>
@@ -147,28 +152,34 @@ function buildEmailHtml(
           <tr>
             <td style="padding:28px 32px;">
               <p style="margin:0 0 8px 0;color:#333;font-size:15px;">Dear <strong>${booking.bookingParty}</strong>,</p>
-              <p style="margin:0 0 24px 0;color:#555;font-size:14px;">Your booking has been successfully confirmed. Please find the details below.</p>
+              <p style="margin:0 0 24px 0;color:#555;font-size:14px;">Your booking has been successfully confirmed with token <strong>${booking.token ?? '—'}</strong>. Please find the complete details below.</p>
 
               <!-- Booking Details -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border-collapse:collapse;">
                 <tr>
                   <td style="background:#8B0000;color:#fff;font-size:12px;font-weight:700;padding:8px 12px;text-transform:uppercase;letter-spacing:.5px;" colspan="4">
-                    Booking Details
+                    Booking &amp; Client Details
                   </td>
                 </tr>
                 <tr style="background:#f9f5ef;">
-                  <td style="padding:9px 12px;font-size:12px;color:#888;width:25%;border:1px solid #e5e5e5;">Booking Party</td>
-                  <td style="padding:9px 12px;font-size:13px;color:#222;font-weight:600;border:1px solid #e5e5e5;">${booking.bookingParty}</td>
-                  <td style="padding:9px 12px;font-size:12px;color:#888;width:25%;border:1px solid #e5e5e5;">Email</td>
-                  <td style="padding:9px 12px;font-size:13px;color:#222;border:1px solid #e5e5e5;">${booking.bookingPartyEmail}</td>
+                  <td style="padding:9px 12px;font-size:12px;color:#888;width:25%;border:1px solid #e5e5e5;">Confirmation #</td>
+                  <td style="padding:9px 12px;font-size:13px;color:#8B0000;font-weight:700;border:1px solid #e5e5e5;">${booking.confirmationNumber}</td>
+                  <td style="padding:9px 12px;font-size:12px;color:#888;width:25%;border:1px solid #e5e5e5;">Token Number</td>
+                  <td style="padding:9px 12px;font-size:13px;color:#8B0000;font-weight:700;font-family:monospace;border:1px solid #e5e5e5;">${booking.token ?? '—'}</td>
                 </tr>
                 <tr>
+                  <td style="padding:9px 12px;font-size:12px;color:#888;width:25%;border:1px solid #e5e5e5;">Booking Party (Client)</td>
+                  <td style="padding:9px 12px;font-size:13px;color:#222;font-weight:600;border:1px solid #e5e5e5;">${booking.bookingParty}</td>
+                  <td style="padding:9px 12px;font-size:12px;color:#888;width:25%;border:1px solid #e5e5e5;">Client Email</td>
+                  <td style="padding:9px 12px;font-size:13px;color:#222;border:1px solid #e5e5e5;">${booking.bookingPartyEmail}</td>
+                </tr>
+                <tr style="background:#f9f5ef;">
                   <td style="padding:9px 12px;font-size:12px;color:#888;border:1px solid #e5e5e5;">Voyage Reference</td>
                   <td style="padding:9px 12px;font-size:13px;color:#222;font-weight:600;border:1px solid #e5e5e5;">${voyageRef.voyageRef}</td>
                   <td style="padding:9px 12px;font-size:12px;color:#888;border:1px solid #e5e5e5;">Rotation Number</td>
                   <td style="padding:9px 12px;font-size:13px;color:#222;border:1px solid #e5e5e5;">${booking.rotationNumber}</td>
                 </tr>
-                <tr style="background:#f9f5ef;">
+                <tr>
                   <td style="padding:9px 12px;font-size:12px;color:#888;border:1px solid #e5e5e5;">Status</td>
                   <td style="padding:9px 12px;font-size:13px;color:#1a7a1a;font-weight:700;border:1px solid #e5e5e5;">${booking.status}</td>
                   <td style="padding:9px 12px;font-size:12px;color:#888;border:1px solid #e5e5e5;">Date &amp; Time</td>
@@ -247,7 +258,7 @@ export async function sendBookingConfirmation(
   const fromName = process.env.FROM_NAME ?? 'Ports Shipping LLC';
   const adminEmail = process.env.ADMIN_EMAIL;
 
-  const subject = `Booking Confirmation – ${booking.confirmationNumber} | Ports Shipping LLC`;
+  const subject = `Booking Confirmed [${booking.confirmationNumber}] - Token: ${booking.token ?? 'N/A'} | Ports Shipping LLC`;
   const htmlBody = buildEmailHtml(booking, containers, voyageRef);
 
   const recipients: string[] = [booking.bookingPartyEmail];
