@@ -8,6 +8,7 @@ export interface ServicePage {
   content: string;
   features: string[];
   keywords: string[];
+  image?: string;
 }
 
 export const ALL_SERVICES: ServicePage[] = [
@@ -16,6 +17,7 @@ export const ALL_SERVICES: ServicePage[] = [
     title: 'Ocean & Sea Freight (NVOCC)',
     shortDescription: 'Global FCL, LCL, Break Bulk and Ro-Ro services with competitive rates and strong carrier partnerships from Dubai.',
     icon: 'Ship',
+    image: '/images/service-ocean.jpg',
     category: 'Ocean & Air',
     heroTitle: 'Reliable Global Ocean Freight Solutions',
     content: `At Ports Shipping LLC, we specialize in providing cost-effective and reliable ocean freight services from Dubai to major ports worldwide. With years of experience and strong partnerships with leading carriers, we ensure your cargo reaches its destination safely, on time, and within budget.
@@ -44,6 +46,7 @@ Our LCL services reach an impressive 145 destinations worldwide. We represent va
     title: 'Air Freight & Chartering',
     shortDescription: 'IATA-certified air cargo operations covering Dubai International Airport terminals T3 & FG5, EK SkyCargo, and full charter solutions.',
     icon: 'Plane',
+    image: '/images/service-air.jpg',
     category: 'Ocean & Air',
     heroTitle: 'Air Freight Management',
     content: `Ports Shipping's Air Freight Division offers effective Air Cargo services. Our Air Freight team offers complete logistical solutions and is a trusted partner for Air Cargo Management. Our expertise in operations, customs regulations, licenses & consular documentation help achieve optimum results.

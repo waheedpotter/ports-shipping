@@ -100,6 +100,7 @@ export interface ServicePage {
   content: string;
   features: string[];
   keywords: string[];
+  image?: string;
 }
 
 export interface NavItem {

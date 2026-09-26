@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface HeroProps {
   onQuoteClick: () => void;
@@ -35,9 +36,22 @@ export default function Hero({ onQuoteClick, onTrackClick }: HeroProps) {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#8B0000] to-[#5a0000] hero-gradient">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-950">
+      {/* Background Hero Banner Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/hero-banner.jpg"
+          alt="Ports Shipping LLC - Global Freight & Port Logistics Dubai"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center lg:object-right"
+          quality={95}
+        />
+        {/* Responsive Overlay to ensure text readability while letting port & ship shine */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#3a0000]/95 via-[#5C0000]/80 to-[#8B0000]/50 lg:from-[#2a0000]/95 lg:via-[#4a0000]/70 lg:to-transparent" />
+        <div className="absolute inset-0 bg-black/20" />
+      </div>
       
       <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
         <motion.div

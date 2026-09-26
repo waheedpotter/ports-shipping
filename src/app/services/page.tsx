@@ -3,6 +3,8 @@ import Link from 'next/link';
 import ALL_SERVICES from '@/data/services';
 import { Ship, Plane, Truck, Warehouse, Package, Shield, Anchor, Globe, FileCheck, HardHat, HeartPulse, Wind, Waves, Building2, Home, UtensilsCrossed, Heart, GitMerge } from 'lucide-react';
 
+import Image from 'next/image';
+
 const iconMap: Record<string, React.ElementType> = {
   Ship, Plane, Truck, Warehouse, Package, Shield, Anchor, Globe, FileCheck,
   HardHat, HeartPulse, Wind, Waves, Building2, Home, UtensilsCrossed, Heart, GitMerge
@@ -24,17 +26,38 @@ export default function ServicesPage() {
   const renderGrid = (services: any[]) => (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {services.map(service => {
-        const Icon = iconMap[service.iconName] || Package;
+        const Icon = iconMap[service.icon] || Package;
         return (
           <Link key={service.slug} href={`/services/${service.slug}`} className="group">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-[#8B0000] transition-all h-full flex flex-col">
-              <div className="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center group-hover:bg-[#8B0000] transition-colors mb-6">
-                <Icon className="w-8 h-8 text-[#8B0000] group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{service.title}</h3>
-              <p className="text-gray-600 mb-6 flex-grow">{service.shortDescription}</p>
-              <div className="text-[#8B0000] font-bold flex items-center group-hover:text-[#C9A84C]">
-                Learn More <span className="ml-2 group-hover:translate-x-2 transition-transform">→</span>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-[#8B0000] transition-all h-full flex flex-col overflow-hidden">
+              {service.image ? (
+                <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-3 left-4 text-white flex items-center gap-2">
+                    <Icon className="w-5 h-5 text-[#C9A84C]" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-200">Featured Service</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-8 pb-0">
+                  <div className="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center group-hover:bg-[#8B0000] transition-colors mb-2">
+                    <Icon className="w-8 h-8 text-[#8B0000] group-hover:text-white transition-colors" />
+                  </div>
+                </div>
+              )}
+              <div className="p-8 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#8B0000] transition-colors">{service.title}</h3>
+                <p className="text-gray-600 mb-6 flex-grow line-clamp-3">{service.shortDescription}</p>
+                <div className="text-[#8B0000] font-bold flex items-center group-hover:text-[#C9A84C]">
+                  Learn More <span className="ml-2 group-hover:translate-x-2 transition-transform">→</span>
+                </div>
               </div>
             </div>
           </Link>

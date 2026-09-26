@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ALL_SERVICES from '@/data/services';
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 export function generateStaticParams() {
   return (ALL_SERVICES || []).map((service) => ({
@@ -44,6 +45,19 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
 
       <div className="container mx-auto px-6 py-16 grid lg:grid-cols-3 gap-16">
         <div className="lg:col-span-2 space-y-12">
+          {service.image && (
+            <div className="relative h-72 sm:h-96 w-full rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+              <Image
+                src={service.image}
+                alt={service.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-cover object-center"
+              />
+            </div>
+          )}
+
           <div className="prose prose-lg max-w-none text-gray-700">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Overview</h2>
             {service.content.split('\n\n').map((para, i) => (
