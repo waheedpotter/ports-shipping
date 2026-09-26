@@ -13,7 +13,7 @@ interface Token {
   notes: string | null;
   booking?: {
     id: string;
-    confirmationNo: string;
+    confirmationNumber: string;
   } | null;
 }
 
@@ -60,7 +60,7 @@ export default function BookingTokensPage() {
     try {
       const params = new URLSearchParams();
       if (statusFilter) params.set('status', statusFilter);
-      const res = await fetch(`/api/admin/booking-tokens?${params.toString()}`);
+      const res = await fetch(`/api/admin/booking-tokens?${params.toString()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error('Failed to fetch tokens');
       const json = await res.json();
       setTokens(json.data ?? json ?? []);
@@ -289,7 +289,7 @@ export default function BookingTokensPage() {
                     <td className="px-4 py-3 text-xs">
                       {t.booking ? (
                         <a href={`/admin/bookings/${t.booking.id}`} className="text-[#8B0000] font-semibold hover:underline font-mono">
-                          {t.booking.confirmationNo}
+                          {t.booking.confirmationNumber}
                         </a>
                       ) : (
                         <span className="text-gray-300">—</span>

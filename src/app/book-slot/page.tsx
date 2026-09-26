@@ -686,7 +686,7 @@ function StepBookingDetails({
               <Package className="w-5 h-5 text-[#8B0000]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">3. Container Details</h2>
+              <h2 className="text-lg font-bold text-gray-900">Booking Details</h2>
               <p className="text-xs text-gray-500">
                 {form.containers.length} container{form.containers.length !== 1 ? 's' : ''} added
               </p>
