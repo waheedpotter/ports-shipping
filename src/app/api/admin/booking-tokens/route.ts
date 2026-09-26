@@ -22,6 +22,7 @@ async function requireAdmin(request: Request) {
 // ─── POST schema ─────────────────────────────────────────────────────────────
 const CreateTokenSchema = z.object({
   expiresAt: z.string().datetime({ offset: true }).optional().nullable(),
+  validityHours: z.number().positive().optional().default(3),
   notes: z.string().max(500).optional().nullable(),
 });
 
@@ -87,15 +88,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { expiresAt, notes } = parsed.data;
+  const { expiresAt, validityHours, notes } = parsed.data;
 
   const token = generateBookingToken();
+  // Tokens are valid for 3 hours by default
+  const tokenExpiry = expiresAt
+    ? new Date(expiresAt)
+    : new Date(Date.now() + (validityHours || 3) * 60 * 60 * 1000);
 
   const bookingToken = await prisma.bookingToken.create({
     data: {
       token,
       status: 'Unused',
-      expiresAt: expiresAt ? new Date(expiresAt) : null,
+      expiresAt: tokenExpiry,
       notes: notes ?? null,
     },
   });

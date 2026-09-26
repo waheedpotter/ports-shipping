@@ -250,7 +250,7 @@ function StepVerifyToken({
       if (!res.ok || !data.valid) {
         const msg: Record<number, string> = {
           400: 'Invalid booking token. Please check the reference number.',
-          410: 'This booking token has expired. Please contact Ports Shipping.',
+          410: 'This booking token has expired (tokens are valid for 3 hours only). Please contact Ports Shipping.',
           409: 'This booking token has already been used.',
           429: 'Too many attempts. Please try again later.',
         };
@@ -304,6 +304,9 @@ function StepVerifyToken({
                   error ? 'border-red-400 bg-red-50' : 'border-gray-300'
                 } focus:outline-none focus:ring-2 focus:ring-[#C9A84C] transition`}
               />
+              <p className="mt-1.5 text-[11px] text-gray-400">
+                Tokens are single-use and valid for 3 hours from issuance.
+              </p>
               {error && (
                 <p className="mt-2 text-sm text-red-600 flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />

@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       if (bookingToken.status !== 'Expired') {
         await prisma.bookingToken.update({ where: { id: bookingToken.id }, data: { status: 'Expired' } });
       }
-      return NextResponse.json({ valid: false, message: 'This booking token has expired. Please contact Ports Shipping.' }, { status: 410 });
+      return NextResponse.json({ valid: false, message: 'This booking token has expired (tokens are valid for 3 hours only). Please contact Ports Shipping for a new token.' }, { status: 410 });
     }
 
     return NextResponse.json({ valid: true, tokenId: bookingToken.id, token: bookingToken.token });

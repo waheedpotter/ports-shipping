@@ -32,6 +32,13 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+function getEffectiveStatus(t: Token): string {
+  if (t.status === 'Unused' && t.expiresAt && new Date() > new Date(t.expiresAt)) {
+    return 'Expired';
+  }
+  return t.status;
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function BookingTokensPage() {
   const [tokens, setTokens] = useState<Token[]>([]);
@@ -78,8 +85,7 @@ export default function BookingTokensPage() {
     setGenerating(true);
     setGeneratedToken(null);
     try {
-      const body: Record<string, string> = {};
-      if (expiresAt) body.expiresAt = new Date(expiresAt).toISOString();
+      const body: Record<string, any> = { validityHours: 3 };
       if (notes) body.notes = notes;
       const res = await fetch('/api/admin/booking-tokens', {
         method: 'POST',
@@ -92,8 +98,7 @@ export default function BookingTokensPage() {
       setGeneratedToken(tokenStr);
       // Optimistic update — prepend to list immediately
       setTokens((prev) => [json, ...prev]);
-      showToast('success', 'Token generated successfully');
-      setExpiresAt('');
+      showToast('success', 'Token generated successfully (valid for 3 hours)');
       setNotes('');
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Generation failed');
@@ -140,7 +145,7 @@ export default function BookingTokensPage() {
   }
 
   const filtered = statusFilter
-    ? tokens.filter((t) => t.status === statusFilter)
+    ? tokens.filter((t) => getEffectiveStatus(t) === statusFilter)
     : tokens;
 
   return (
@@ -156,7 +161,7 @@ export default function BookingTokensPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Booking Tokens</h1>
-          <p className="text-gray-500 text-sm mt-1">Generate and manage one-time booking tokens</p>
+          <p className="text-gray-500 text-sm mt-1">Generate and manage single-use booking tokens (valid for 3 hours)</p>
         </div>
         <button
           onClick={() => { setShowForm(!showForm); setGeneratedToken(null); }}
@@ -172,21 +177,19 @@ export default function BookingTokensPage() {
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Generate New Token</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Expiry Date (optional)</label>
-              <input
-                type="date"
-                value={expiresAt}
-                onChange={(e) => setExpiresAt(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
-              />
+              <label className="block text-xs font-medium text-gray-600 mb-1">Validity Period</label>
+              <div className="flex items-center gap-2 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-lg text-sm">
+                <span className="font-bold text-[#8B0000] whitespace-nowrap">⏳ 3 Hours</span>
+                <span className="text-xs text-amber-800">Token will automatically expire in 3 hours</span>
+              </div>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Notes (optional)</label>
-              <textarea
+              <label className="block text-xs font-medium text-gray-600 mb-1">Notes / Client Name (optional)</label>
+              <input
+                type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                rows={1}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B0000] resize-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
                 placeholder="e.g. For ABC Shipping Co."
               />
             </div>
@@ -194,9 +197,9 @@ export default function BookingTokensPage() {
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="px-6 py-2.5 bg-[#C9A84C] text-white rounded-lg text-sm font-semibold hover:bg-yellow-600 disabled:opacity-50 transition"
+            className="px-6 py-2.5 bg-[#8B0000] text-white rounded-lg text-sm font-semibold hover:bg-red-900 disabled:opacity-50 transition"
           >
-            {generating ? 'Generating…' : '⚡ GENERATE TOKEN'}
+            {generating ? 'Generating…' : '⚡ GENERATE 3-HR TOKEN'}
           </button>
 
           {/* Generated token display */}
@@ -270,64 +273,88 @@ export default function BookingTokensPage() {
                   <td colSpan={8} className="text-center py-12 text-gray-400">No tokens found.</td>
                 </tr>
               ) : (
-                filtered.map((t, i) => (
-                  <tr key={t.id} className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-amber-50 transition-colors`}>
-                    <td className="px-4 py-3 font-mono text-[#8B0000] font-semibold text-xs whitespace-nowrap">
-                      {t.token}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <StatusBadge status={t.status} />
-                    </td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap text-xs">
-                      {new Date(t.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap text-xs">
-                      {t.expiresAt ? new Date(t.expiresAt).toLocaleDateString() : <span className="text-gray-300">—</span>}
-                    </td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap text-xs">
-                      {t.usedAt ? new Date(t.usedAt).toLocaleDateString() : <span className="text-gray-300">—</span>}
-                    </td>
-                    <td className="px-4 py-3 text-xs">
-                      {t.booking ? (
-                        <a href={`/admin/bookings/${t.booking.id}`} className="text-[#8B0000] font-semibold hover:underline font-mono">
-                          {t.booking.confirmationNumber}
-                        </a>
-                      ) : (
-                        <span className="text-gray-300">—</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-gray-500 text-xs max-w-[140px] truncate">
-                      {t.notes ?? <span className="text-gray-300">—</span>}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          onClick={() => copyToClipboard(t.token)}
-                          title="Copy token"
-                          className="px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs font-medium hover:bg-slate-200 transition"
-                        >
-                          📋
-                        </button>
-                        {t.status === 'Unused' && (
-                          <>
-                            <button
-                              onClick={() => handleDeactivate(t.id)}
-                              className="px-2 py-1 bg-amber-50 text-amber-700 rounded text-xs font-medium hover:bg-amber-100 transition"
-                            >
-                              Deactivate
-                            </button>
-                            <button
-                              onClick={() => handleDelete(t.id, t.token)}
-                              className="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium hover:bg-red-100 transition"
-                            >
-                              Delete
-                            </button>
-                          </>
+                filtered.map((t, i) => {
+                  const effectiveStatus = getEffectiveStatus(t);
+                  return (
+                    <tr key={t.id} className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-amber-50 transition-colors`}>
+                      <td className="px-4 py-3 font-mono text-[#8B0000] font-semibold text-xs whitespace-nowrap">
+                        {t.token}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <StatusBadge status={effectiveStatus} />
+                      </td>
+                      <td className="px-4 py-3 text-gray-600 whitespace-nowrap text-xs">
+                        <div>{new Date(t.createdAt).toLocaleDateString()}</div>
+                        <div className="text-gray-400 font-mono text-[11px]">
+                          {new Date(t.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-gray-600 whitespace-nowrap text-xs">
+                        {t.expiresAt ? (
+                          <div>
+                            <div>{new Date(t.expiresAt).toLocaleDateString()}</div>
+                            <div className={`font-mono text-[11px] ${effectiveStatus === 'Expired' ? 'text-red-600 font-semibold' : 'text-gray-400'}`}>
+                              {new Date(t.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-gray-300">—</span>
                         )}
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-4 py-3 text-gray-600 whitespace-nowrap text-xs">
+                        {t.usedAt ? (
+                          <div>
+                            <div>{new Date(t.usedAt).toLocaleDateString()}</div>
+                            <div className="text-gray-400 font-mono text-[11px]">
+                              {new Date(t.usedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-gray-300">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-xs">
+                        {t.booking ? (
+                          <a href={`/admin/bookings/${t.booking.id}`} className="text-[#8B0000] font-semibold hover:underline font-mono">
+                            {t.booking.confirmationNumber}
+                          </a>
+                        ) : (
+                          <span className="text-gray-300">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-gray-500 text-xs max-w-[140px] truncate">
+                        {t.notes ?? <span className="text-gray-300">—</span>}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <button
+                            onClick={() => copyToClipboard(t.token)}
+                            title="Copy token"
+                            className="px-2 py-1 bg-slate-100 text-slate-700 rounded text-xs font-medium hover:bg-slate-200 transition"
+                          >
+                            📋
+                          </button>
+                          {effectiveStatus === 'Unused' && (
+                            <>
+                              <button
+                                onClick={() => handleDeactivate(t.id)}
+                                className="px-2 py-1 bg-amber-50 text-amber-700 rounded text-xs font-medium hover:bg-amber-100 transition"
+                              >
+                                Deactivate
+                              </button>
+                              <button
+                                onClick={() => handleDelete(t.id, t.token)}
+                                className="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium hover:bg-red-100 transition"
+                              >
+                                Delete
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
