@@ -23,6 +23,9 @@ const CreateVoyageSchema = z.object({
     .regex(/^[A-Za-z0-9_-]+$/, 'Only letters, numbers, hyphens, and underscores allowed'),
 });
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // ─── GET /api/admin/voyage-refs ──────────────────────────────────────────────
 export async function GET(request: Request) {
   const admin = await requireAdmin(request);

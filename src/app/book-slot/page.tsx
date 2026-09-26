@@ -477,13 +477,13 @@ function StepBookingDetails({
   const [globalError, setGlobalError] = useState('');
 
   useEffect(() => {
-    fetch('/api/booking/voyage-refs')
+    fetch('/api/booking/voyage-refs', { cache: 'no-store' })
       .then(r => r.json())
       .then(d => setVoyageRefs(Array.isArray(d) ? d : []))
       .catch(() => setVoyageRefs([]))
       .finally(() => setLoadingRefs(false));
 
-    fetch('/api/booking/ports')
+    fetch('/api/booking/ports', { cache: 'no-store' })
       .then(r => r.json())
       .then(d => setPorts(Array.isArray(d) ? d : []))
       .catch(() => setPorts([]))

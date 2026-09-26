@@ -24,6 +24,9 @@ const CreatePortSchema = z.object({
   portName: z.string().max(200).optional().nullable(),
 });
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // ─── GET /api/admin/ports ────────────────────────────────────────────────────
 export async function GET(request: Request) {
   const admin = await requireAdmin(request);

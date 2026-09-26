@@ -24,15 +24,12 @@ function setupDatabaseUrl(): string {
   }
 
   // Non-Vercel (Localhost, GoDaddy):
-  if (!process.env.DATABASE_URL) {
-    const defaultDb = path.join(process.cwd(), 'prisma', 'dev.db');
-    process.env.DATABASE_URL = `file:${defaultDb}`;
-  }
-
+  const absoluteDbPath = path.resolve(process.cwd(), 'prisma', 'dev.db');
+  process.env.DATABASE_URL = `file:${absoluteDbPath}`;
   return process.env.DATABASE_URL;
 }
 
-setupDatabaseUrl();
+const dbUrl = setupDatabaseUrl();
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -41,6 +38,11 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
+    datasources: {
+      db: {
+        url: dbUrl,
+      },
+    },
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   });
 

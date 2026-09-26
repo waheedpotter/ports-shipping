@@ -7,7 +7,7 @@ interface Port {
   id: string;
   portCode: string;
   portName: string | null;
-  status: 'Active' | 'Inactive';
+  active: boolean;
   createdAt: string;
   _count?: { bookingsAsPol?: number; bookingsAsPod?: number };
 }
@@ -35,7 +35,7 @@ export default function PortsPage() {
   const fetchPorts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/ports');
+      const res = await fetch('/api/admin/ports', { cache: 'no-store' });
       if (!res.ok) throw new Error('Failed to fetch ports');
       const json = await res.json();
       setPorts(json.data ?? json ?? []);
@@ -78,15 +78,15 @@ export default function PortsPage() {
 
   // ── Toggle ──
   async function handleToggle(p: Port) {
-    const newStatus = p.status === 'Active' ? 'Inactive' : 'Active';
+    const newActive = !p.active;
     try {
       const res = await fetch(`/api/admin/ports/${p.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ active: newActive }),
       });
       if (!res.ok) throw new Error('Update failed');
-      showToast('success', `Port ${newStatus === 'Active' ? 'activated' : 'deactivated'}`);
+      showToast('success', `Port ${newActive ? 'activated' : 'deactivated'}`);
       fetchPorts();
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Update failed');
@@ -220,11 +220,11 @@ export default function PortsPage() {
                     <td className="px-4 py-3 text-gray-700">{p.portName ?? <span className="text-gray-400 italic text-xs">—</span>}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                        p.status === 'Active'
+                        p.active
                           ? 'bg-green-100 text-green-800 border border-green-200'
                           : 'bg-gray-100 text-gray-600 border border-gray-200'
                       }`}>
-                        {p.status}
+                        {p.active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">
@@ -235,12 +235,12 @@ export default function PortsPage() {
                         <button
                           onClick={() => handleToggle(p)}
                           className={`px-3 py-1 rounded text-xs font-semibold transition ${
-                            p.status === 'Active'
+                            p.active
                               ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
                               : 'bg-green-50 text-green-700 hover:bg-green-100'
                           }`}
                         >
-                          {p.status === 'Active' ? 'Deactivate' : 'Activate'}
+                          {p.active ? 'Deactivate' : 'Activate'}
                         </button>
                         <button
                           onClick={() => handleDelete(p)}

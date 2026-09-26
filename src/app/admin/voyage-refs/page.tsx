@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 interface VoyageRef {
   id: string;
   voyageRef: string;
-  status: 'Active' | 'Inactive';
+  active: boolean;
   createdAt: string;
   _count?: { bookings: number };
 }
@@ -32,7 +32,7 @@ export default function VoyageRefsPage() {
   const fetchVoyageRefs = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/voyage-refs');
+      const res = await fetch('/api/admin/voyage-refs', { cache: 'no-store' });
       if (!res.ok) throw new Error('Failed to fetch voyage references');
       const json = await res.json();
       setVoyageRefs(json.data ?? json ?? []);
@@ -72,15 +72,15 @@ export default function VoyageRefsPage() {
 
   // ── Toggle status ──
   async function handleToggle(v: VoyageRef) {
-    const newStatus = v.status === 'Active' ? 'Inactive' : 'Active';
+    const newActive = !v.active;
     try {
       const res = await fetch(`/api/admin/voyage-refs/${v.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ active: newActive }),
       });
       if (!res.ok) throw new Error('Update failed');
-      showToast('success', `Voyage ref ${newStatus === 'Active' ? 'activated' : 'deactivated'}`);
+      showToast('success', `Voyage ref ${newActive ? 'activated' : 'deactivated'}`);
       fetchVoyageRefs();
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Update failed');
@@ -185,11 +185,11 @@ export default function VoyageRefsPage() {
                     <td className="px-4 py-3 font-mono font-semibold text-gray-900">{v.voyageRef}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                        v.status === 'Active'
+                        v.active
                           ? 'bg-green-100 text-green-800 border border-green-200'
                           : 'bg-gray-100 text-gray-600 border border-gray-200'
                       }`}>
-                        {v.status}
+                        {v.active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -205,12 +205,12 @@ export default function VoyageRefsPage() {
                         <button
                           onClick={() => handleToggle(v)}
                           className={`px-3 py-1 rounded text-xs font-semibold transition ${
-                            v.status === 'Active'
+                            v.active
                               ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
                               : 'bg-green-50 text-green-700 hover:bg-green-100'
                           }`}
                         >
-                          {v.status === 'Active' ? 'Deactivate' : 'Activate'}
+                          {v.active ? 'Deactivate' : 'Activate'}
                         </button>
                         <button
                           onClick={() => handleDelete(v)}
