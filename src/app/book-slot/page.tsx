@@ -18,6 +18,7 @@ import {
   BadgeCheck,
   Printer,
   Download,
+  RotateCcw,
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────
@@ -88,11 +89,8 @@ const EMPTY_CONTAINER: Container = {
 
 const STEPS = [
   { label: 'Verify Token', icon: BadgeCheck },
-  { label: 'Voyage Info', icon: Ship },
-  { label: 'Containers', icon: Package },
-  { label: 'Booking Party', icon: User },
-  { label: 'Review', icon: ClipboardList },
-  { label: 'Confirmed', icon: CalendarCheck },
+  { label: 'Booking Details', icon: Package },
+  { label: 'Review & Confirmed', icon: CalendarCheck },
 ];
 
 /* ─────────────────────────────────────────────
@@ -101,10 +99,6 @@ const STEPS = [
 function isValidEmail(e: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 }
-
-/* ─────────────────────────────────────────────
-   Sub-components
-───────────────────────────────────────────── */
 
 /** Spinner */
 function Spinner({ className = 'w-5 h-5' }: { className?: string }) {
@@ -117,13 +111,13 @@ function Field({
 }: { label: string; required?: boolean; error?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+      <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}
       {error && (
-        <p className="text-xs text-red-600 flex items-center gap-1">
-          <AlertCircle className="w-3 h-3 flex-shrink-0" /> {error}
+        <p className="text-xs text-red-600 flex items-center gap-1 mt-0.5">
+          <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" /> {error}
         </p>
       )}
     </div>
@@ -144,8 +138,9 @@ function Input({
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      className={`w-full px-3 py-2 text-sm rounded-md border ${error ? 'border-red-400 bg-red-50' : 'border-gray-300'
-        } focus:outline-none focus:ring-2 focus:ring-[#C9A84C] focus:border-transparent transition ${className}`}
+      className={`w-full px-3.5 py-2.5 text-sm rounded-lg border ${
+        error ? 'border-red-400 bg-red-50 text-red-900' : 'border-gray-300 bg-white text-gray-900'
+      } focus:outline-none focus:ring-2 focus:ring-[#C9A84C] focus:border-transparent transition ${className}`}
     />
   );
 }
@@ -162,8 +157,9 @@ function Select({
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className={`w-full px-3 py-2 text-sm rounded-md border ${error ? 'border-red-400 bg-red-50' : 'border-gray-300'
-        } focus:outline-none focus:ring-2 focus:ring-[#C9A84C] focus:border-transparent transition bg-white`}
+      className={`w-full px-3.5 py-2.5 text-sm rounded-lg border ${
+        error ? 'border-red-400 bg-red-50 text-red-900' : 'border-gray-300 bg-white text-gray-900'
+      } focus:outline-none focus:ring-2 focus:ring-[#C9A84C] focus:border-transparent transition`}
     >
       <option value="">{placeholder}</option>
       {options.map(o => (
@@ -179,7 +175,7 @@ function Select({
 function StepIndicator({ current }: { current: number }) {
   return (
     <div className="w-full overflow-x-auto pb-2">
-      <div className="flex items-center min-w-max mx-auto px-4">
+      <div className="flex items-center justify-center min-w-max mx-auto px-4">
         {STEPS.map((step, idx) => {
           const done = idx < current;
           const active = idx === current;
@@ -188,30 +184,33 @@ function StepIndicator({ current }: { current: number }) {
             <div key={step.label} className="flex items-center">
               <div className="flex flex-col items-center">
                 <div
-                  className={`w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${done
-                    ? 'bg-green-500 border-green-500 text-white'
-                    : active
-                      ? 'bg-[#C9A84C] border-[#C9A84C] text-white shadow-lg scale-110'
-                      : 'bg-white border-gray-300 text-gray-400'
-                    }`}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                    done
+                      ? 'bg-green-600 border-green-600 text-white shadow'
+                      : active
+                        ? 'bg-[#8B0000] border-[#8B0000] text-white shadow-lg scale-110'
+                        : 'bg-white border-gray-300 text-gray-400'
+                  }`}
                 >
                   {done ? (
                     <CheckCircle2 className="w-5 h-5" />
                   ) : (
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-5 h-5" />
                   )}
                 </div>
                 <span
-                  className={`mt-1 text-[10px] font-semibold whitespace-nowrap ${done ? 'text-green-600' : active ? 'text-[#C9A84C]' : 'text-gray-400'
-                    }`}
+                  className={`mt-1.5 text-xs font-semibold whitespace-nowrap ${
+                    done ? 'text-green-700' : active ? 'text-[#8B0000]' : 'text-gray-400'
+                  }`}
                 >
                   {step.label}
                 </span>
               </div>
               {idx < STEPS.length - 1 && (
                 <div
-                  className={`h-0.5 w-10 sm:w-16 mx-1 transition-all duration-500 ${idx < current ? 'bg-green-400' : 'bg-gray-200'
-                    }`}
+                  className={`h-0.5 w-16 sm:w-28 mx-2 transition-all duration-500 ${
+                    idx < current ? 'bg-green-500' : 'bg-gray-200'
+                  }`}
                 />
               )}
             </div>
@@ -259,7 +258,7 @@ function StepVerifyToken({
         return;
       }
       setSuccess(`✓ Token ${t} verified successfully`);
-      setTimeout(() => onVerified(data.tokenId, t), 800);
+      setTimeout(() => onVerified(data.tokenId, t), 700);
     } catch {
       setError('Network error. Please check your connection and try again.');
     } finally {
@@ -274,9 +273,9 @@ function StepVerifyToken({
           <div className="w-16 h-16 rounded-full bg-[#8B0000]/10 flex items-center justify-center mb-4">
             <BadgeCheck className="w-8 h-8 text-[#8B0000]" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900">Verify Booking Token</h2>
+          <h2 className="text-xl font-bold text-gray-900">Enter Booking Token</h2>
           <p className="text-sm text-gray-500 mt-1 text-center">
-            Enter the booking token reference provided by Ports Shipping LLC
+            Enter the one-time reference token provided by Ports Shipping LLC
           </p>
         </div>
 
@@ -301,8 +300,9 @@ function StepVerifyToken({
                 onChange={e => { setToken(e.target.value.toUpperCase()); setError(''); }}
                 onKeyDown={e => e.key === 'Enter' && handleVerify()}
                 placeholder="PS-BK-XXXXXX"
-                className={`w-full px-4 py-3 text-base rounded-lg border font-mono tracking-widest ${error ? 'border-red-400 bg-red-50' : 'border-gray-300'
-                  } focus:outline-none focus:ring-2 focus:ring-[#C9A84C] transition`}
+                className={`w-full px-4 py-3 text-base rounded-lg border font-mono tracking-widest ${
+                  error ? 'border-red-400 bg-red-50' : 'border-gray-300'
+                } focus:outline-none focus:ring-2 focus:ring-[#C9A84C] transition`}
               />
               {error && (
                 <p className="mt-2 text-sm text-red-600 flex items-start gap-2">
@@ -314,9 +314,9 @@ function StepVerifyToken({
             <button
               onClick={handleVerify}
               disabled={loading}
-              className="w-full py-3 bg-[#8B0000] text-white font-bold rounded-lg hover:bg-[#7a0000] transition flex items-center justify-center gap-2 disabled:opacity-70"
+              className="w-full py-3 bg-[#8B0000] text-white font-bold rounded-lg hover:bg-[#7a0000] transition flex items-center justify-center gap-2 disabled:opacity-70 shadow"
             >
-              {loading ? <><Spinner /> Verifying…</> : 'VERIFY TOKEN'}
+              {loading ? <><Spinner /> Verifying…</> : 'VERIFY & CONTINUE'}
             </button>
           </>
         )}
@@ -326,109 +326,15 @@ function StepVerifyToken({
 }
 
 /* ─────────────────────────────────────────────
-   Step 2 — Voyage Information
-───────────────────────────────────────────── */
-function StepVoyageInfo({
-  data,
-  onChange,
-  onNext,
-  onBack,
-}: {
-  data: Pick<BookingFormData, 'voyageReferenceId' | 'voyageRef' | 'rotationNumber'>;
-  onChange: (k: string, v: string) => void;
-  onNext: () => void;
-  onBack: () => void;
-}) {
-  const [voyageRefs, setVoyageRefs] = useState<VoyageRef[]>([]);
-  const [loadingRefs, setLoadingRefs] = useState(true);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    fetch('/api/booking/voyage-refs')
-      .then(r => r.json())
-      .then(d => setVoyageRefs(Array.isArray(d) ? d : []))
-      .catch(() => setVoyageRefs([]))
-      .finally(() => setLoadingRefs(false));
-  }, []);
-
-  const validate = () => {
-    const e: Record<string, string> = {};
-    if (!data.voyageReferenceId) e.voyageReferenceId = 'Please select a voyage reference.';
-    if (!data.rotationNumber.trim()) e.rotationNumber = 'Rotation number is required.';
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const handleVoyageChange = (id: string) => {
-    const ref = voyageRefs.find(v => v.id === id);
-    onChange('voyageReferenceId', id);
-    onChange('voyageRef', ref?.voyageRef || '');
-  };
-
-  return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 sm:p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center">
-            <Ship className="w-5 h-5 text-[#8B0000]" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">Voyage Information</h2>
-            <p className="text-sm text-gray-500">Select the voyage and rotation details</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-5">
-          <Field label="Voyage Reference" required error={errors.voyageReferenceId}>
-            {loadingRefs ? (
-              <div className="flex items-center gap-2 text-sm text-gray-500 py-2">
-                <Spinner className="w-4 h-4" /> Loading voyage references…
-              </div>
-            ) : (
-              <Select
-                value={data.voyageReferenceId}
-                onChange={handleVoyageChange}
-                options={voyageRefs.map(v => ({ value: v.id, label: v.voyageRef }))}
-                placeholder="— Select voyage reference —"
-                error={!!errors.voyageReferenceId}
-              />
-            )}
-          </Field>
-
-          <Field label="Rotation Number" required error={errors.rotationNumber}>
-            <Input
-              value={data.rotationNumber}
-              onChange={v => onChange('rotationNumber', v)}
-              placeholder="e.g. ROT-2026-001"
-              error={!!errors.rotationNumber}
-            />
-          </Field>
-        </div>
-
-        <div className="flex justify-between mt-8">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition text-sm"
-          >
-            <ChevronLeft className="w-4 h-4" /> BACK
-          </button>
-          <button
-            onClick={() => validate() && onNext()}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#8B0000] text-white rounded-lg font-bold hover:bg-[#7a0000] transition text-sm"
-          >
-            NEXT <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
    Container Card
 ───────────────────────────────────────────── */
 function ContainerCard({
-  idx, container, ports, onChange, onRemove, canRemove,
+  idx,
+  container,
+  ports,
+  onChange,
+  onRemove,
+  canRemove,
 }: {
   idx: number;
   container: Container;
@@ -437,21 +343,18 @@ function ContainerCard({
   onRemove: (idx: number) => void;
   canRemove: boolean;
 }) {
-  const [errors, setErrors] = useState<Partial<Record<keyof Container, string>>>({});
   const portOptions = ports.map(p => ({
     value: p.portCode,
     label: p.portName ? `${p.portCode} — ${p.portName}` : p.portCode,
   }));
 
-  // expose validation upward via ref — handled by parent calling validate on each
   const upd = (k: keyof Container, v: string) => {
     onChange(idx, k, v);
-    if (errors[k]) setErrors(prev => ({ ...prev, [k]: '' }));
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-100 p-5 sm:p-6 mb-4">
-      <div className="flex items-center justify-between mb-5">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 sm:p-6 mb-4">
+      <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-100">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-[#8B0000] text-white flex items-center justify-center text-xs font-bold">
             {idx + 1}
@@ -459,78 +362,76 @@ function ContainerCard({
           <h3 className="font-bold text-gray-800 text-sm">Container #{idx + 1}</h3>
         </div>
         <button
+          type="button"
           onClick={() => onRemove(idx)}
           disabled={!canRemove}
-          className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold transition ${canRemove
-            ? 'text-red-600 hover:bg-red-50 border border-red-200'
-            : 'text-gray-300 border border-gray-200 cursor-not-allowed'
-            }`}
+          className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold transition ${
+            canRemove
+              ? 'text-red-600 hover:bg-red-50 border border-red-200'
+              : 'text-gray-300 border border-gray-200 cursor-not-allowed'
+          }`}
         >
           <X className="w-3.5 h-3.5" /> Remove
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Field label="POL" required error={errors.pol}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <Field label="POL (Port of Loading)" required>
           <Select
             value={container.pol}
             onChange={v => upd('pol', v)}
             options={portOptions}
-            placeholder="— Port of Loading —"
-            error={!!errors.pol}
+            placeholder="— Select POL —"
           />
         </Field>
-        <Field label="POD" required error={errors.pod}>
+        <Field label="POD (Port of Discharge)" required>
           <Select
             value={container.pod}
             onChange={v => upd('pod', v)}
             options={portOptions}
-            placeholder="— Port of Discharge —"
-            error={!!errors.pod}
+            placeholder="— Select POD —"
           />
         </Field>
-        <Field label="Line">
-          <Input value={container.line} onChange={v => upd('line', v)} placeholder="Shipping line" />
-        </Field>
-        <Field label="Container Number" required error={errors.containerNumber}>
+        <Field label="Container Number" required>
           <Input
             value={container.containerNumber}
             onChange={v => upd('containerNumber', v.toUpperCase())}
             placeholder="e.g. ABCD1234567"
-            error={!!errors.containerNumber}
           />
         </Field>
-        <Field label="CHK">
-          <Input value={container.chk} onChange={v => upd('chk', v)} placeholder="Check digit" />
-        </Field>
-        <Field label="ISO" required error={errors.iso}>
+        <Field label="ISO Type" required>
           <Select
             value={container.iso}
             onChange={v => upd('iso', v)}
             options={ISO_OPTIONS.map(o => ({ value: o, label: o }))}
             placeholder="— ISO Type —"
-            error={!!errors.iso}
           />
+        </Field>
+        <Field label="Shipping Line">
+          <Input value={container.line} onChange={v => upd('line', v)} placeholder="e.g. Ports Shipping" />
+        </Field>
+        <Field label="CHK (Check Digit)">
+          <Input value={container.chk} onChange={v => upd('chk', v)} placeholder="e.g. 5" />
         </Field>
         <Field label="POD Agent Name">
           <Input value={container.podAgentName} onChange={v => upd('podAgentName', v)} placeholder="Agent name" />
         </Field>
-        <Field label="Email">
+        <Field label="Agent Email">
           <Input type="email" value={container.email} onChange={v => upd('email', v)} placeholder="agent@example.com" />
         </Field>
         <Field label="MUB">
           <Input value={container.mub} onChange={v => upd('mub', v)} placeholder="MUB" />
         </Field>
-        <Field label="IMCO">
-          <Input value={container.imco} onChange={v => upd('imco', v)} placeholder="IMCO class" />
+        <Field label="IMCO Class">
+          <Input value={container.imco} onChange={v => upd('imco', v)} placeholder="e.g. 3.1" />
         </Field>
-        <Field label="UN MO">
-          <Input value={container.unMo} onChange={v => upd('unMo', v)} placeholder="UN number" />
+        <Field label="UN Number">
+          <Input value={container.unMo} onChange={v => upd('unMo', v)} placeholder="e.g. 1993" />
         </Field>
-        <Field label="Temp">
+        <Field label="Temperature">
           <Input value={container.temperature} onChange={v => upd('temperature', v)} placeholder="e.g. -18°C" />
         </Field>
-        <Field label="VGM WT">
+        <Field label="VGM Weight">
           <Input
             type="number"
             step="0.01"
@@ -539,7 +440,7 @@ function ContainerCard({
             placeholder="0.00"
           />
         </Field>
-        <Field label="UOM">
+        <Field label="UOM (Unit)">
           <Select
             value={container.uom}
             onChange={v => upd('uom', v)}
@@ -552,24 +453,36 @@ function ContainerCard({
 }
 
 /* ─────────────────────────────────────────────
-   Step 3 — Container Details
+   Step 2 — Unified Booking Details:
+   Voyage Info + Containers + Booking Party (All in SAME Page)
 ───────────────────────────────────────────── */
-function StepContainerDetails({
-  containers,
+function StepBookingDetails({
+  form,
+  onChange,
   onContainersChange,
   onNext,
-  onBack,
+  onBackToToken,
 }: {
-  containers: Container[];
+  form: BookingFormData;
+  onChange: (k: string, v: string) => void;
   onContainersChange: (c: Container[]) => void;
   onNext: () => void;
-  onBack: () => void;
+  onBackToToken: () => void;
 }) {
+  const [voyageRefs, setVoyageRefs] = useState<VoyageRef[]>([]);
+  const [loadingRefs, setLoadingRefs] = useState(true);
   const [ports, setPorts] = useState<Port[]>([]);
   const [loadingPorts, setLoadingPorts] = useState(true);
-  const [validationError, setValidationError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [globalError, setGlobalError] = useState('');
 
   useEffect(() => {
+    fetch('/api/booking/voyage-refs')
+      .then(r => r.json())
+      .then(d => setVoyageRefs(Array.isArray(d) ? d : []))
+      .catch(() => setVoyageRefs([]))
+      .finally(() => setLoadingRefs(false));
+
     fetch('/api/booking/ports')
       .then(r => r.json())
       .then(d => setPorts(Array.isArray(d) ? d : []))
@@ -577,188 +490,296 @@ function StepContainerDetails({
       .finally(() => setLoadingPorts(false));
   }, []);
 
+  const handleVoyageChange = (id: string) => {
+    const ref = voyageRefs.find(v => v.id === id);
+    onChange('voyageReferenceId', id);
+    onChange('voyageRef', ref?.voyageRef || '');
+    if (errors.voyageReferenceId) setErrors(prev => ({ ...prev, voyageReferenceId: '' }));
+  };
+
   const updateContainer = (idx: number, key: keyof Container, val: string) => {
-    const updated = containers.map((c, i) => i === idx ? { ...c, [key]: val } : c);
+    const updated = form.containers.map((c, i) => i === idx ? { ...c, [key]: val } : c);
     onContainersChange(updated);
   };
 
   const addContainer = () => {
-    onContainersChange([...containers, { ...EMPTY_CONTAINER }]);
+    onContainersChange([...form.containers, { ...EMPTY_CONTAINER }]);
   };
 
   const removeContainer = (idx: number) => {
-    if (containers.length <= 1) return;
-    onContainersChange(containers.filter((_, i) => i !== idx));
+    if (form.containers.length <= 1) return;
+    onContainersChange(form.containers.filter((_, i) => i !== idx));
   };
 
-  const validate = () => {
-    for (let i = 0; i < containers.length; i++) {
-      const c = containers[i];
-      if (!c.pol) { setValidationError(`Container #${i + 1}: POL is required.`); return false; }
-      if (!c.pod) { setValidationError(`Container #${i + 1}: POD is required.`); return false; }
-      if (!c.containerNumber.trim()) { setValidationError(`Container #${i + 1}: Container Number is required.`); return false; }
-      if (!c.iso) { setValidationError(`Container #${i + 1}: ISO type is required.`); return false; }
-    }
-    setValidationError('');
-    return true;
-  };
-
-  return (
-    <div className="w-full max-w-3xl mx-auto">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center">
-          <Package className="w-5 h-5 text-[#8B0000]" />
-        </div>
-        <div>
-          <h2 className="text-lg font-bold text-gray-900">Container Details</h2>
-          <p className="text-sm text-gray-500">{containers.length} container{containers.length !== 1 ? 's' : ''} added</p>
-        </div>
-      </div>
-
-      {loadingPorts ? (
-        <div className="flex items-center gap-3 py-12 justify-center text-gray-500">
-          <Spinner /> Loading port list…
-        </div>
-      ) : (
-        <>
-          {containers.map((c, idx) => (
-            <ContainerCard
-              key={idx}
-              idx={idx}
-              container={c}
-              ports={ports}
-              onChange={updateContainer}
-              onRemove={removeContainer}
-              canRemove={containers.length > 1}
-            />
-          ))}
-
-          <button
-            onClick={addContainer}
-            className="flex items-center gap-2 px-5 py-2.5 border-2 border-dashed border-[#C9A84C] text-[#C9A84C] rounded-xl font-semibold hover:bg-amber-50 transition text-sm w-full justify-center mb-6"
-          >
-            <Plus className="w-4 h-4" /> ADD CONTAINER
-          </button>
-        </>
-      )}
-
-      {validationError && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" /> {validationError}
-        </div>
-      )}
-
-      <div className="flex justify-between mt-2">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition text-sm"
-        >
-          <ChevronLeft className="w-4 h-4" /> BACK
-        </button>
-        <button
-          onClick={() => validate() && onNext()}
-          className="flex items-center gap-2 px-6 py-2.5 bg-[#8B0000] text-white rounded-lg font-bold hover:bg-[#7a0000] transition text-sm"
-        >
-          NEXT <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Step 4 — Booking Party
-───────────────────────────────────────────── */
-function StepBookingParty({
-  data,
-  onChange,
-  onNext,
-  onBack,
-}: {
-  data: Pick<BookingFormData, 'bookingParty' | 'bookingPartyEmail'>;
-  onChange: (k: string, v: string) => void;
-  onNext: () => void;
-  onBack: () => void;
-}) {
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validate = () => {
+  const validateAndProceed = () => {
     const e: Record<string, string> = {};
-    if (!data.bookingParty.trim()) e.bookingParty = 'Booking party name is required.';
-    if (!data.bookingPartyEmail.trim()) e.bookingPartyEmail = 'Email address is required.';
-    else if (!isValidEmail(data.bookingPartyEmail)) e.bookingPartyEmail = 'Please enter a valid email address.';
+    setGlobalError('');
+
+    // 1. Voyage Info Validation
+    if (!form.voyageReferenceId) {
+      e.voyageReferenceId = 'Please select a Voyage Reference.';
+    }
+    if (!form.rotationNumber.trim()) {
+      e.rotationNumber = 'Rotation Number is required.';
+    }
+
+    // 2. Booking Party Validation
+    if (!form.bookingParty.trim()) {
+      e.bookingParty = 'Booking Party (Company / Individual Name) is required.';
+    }
+    if (!form.bookingPartyEmail.trim()) {
+      e.bookingPartyEmail = 'Email address is required.';
+    } else if (!isValidEmail(form.bookingPartyEmail)) {
+      e.bookingPartyEmail = 'Please enter a valid email address.';
+    }
+
+    // 3. Containers Validation
+    if (!form.containers || form.containers.length === 0) {
+      setGlobalError('Please add at least one container.');
+      setErrors(e);
+      return;
+    }
+
+    for (let i = 0; i < form.containers.length; i++) {
+      const c = form.containers[i];
+      if (!c.pol) {
+        setGlobalError(`Container #${i + 1}: POL (Port of Loading) is required.`);
+        setErrors(e);
+        return;
+      }
+      if (!c.pod) {
+        setGlobalError(`Container #${i + 1}: POD (Port of Discharge) is required.`);
+        setErrors(e);
+        return;
+      }
+      if (!c.containerNumber.trim()) {
+        setGlobalError(`Container #${i + 1}: Container Number is required.`);
+        setErrors(e);
+        return;
+      }
+      if (!c.iso) {
+        setGlobalError(`Container #${i + 1}: ISO Type is required.`);
+        setErrors(e);
+        return;
+      }
+    }
+
     setErrors(e);
-    return Object.keys(e).length === 0;
+    if (Object.keys(e).length > 0) {
+      setGlobalError('Please complete all required fields highlighted in red.');
+      return;
+    }
+
+    onNext();
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 sm:p-8">
-        <div className="flex items-center gap-3 mb-6">
+    <div className="w-full max-w-4xl mx-auto space-y-6">
+      {/* Verified Token Active Banner */}
+      <div className="bg-amber-50 border border-[#C9A84C]/50 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center font-bold">
+            ✓
+          </div>
+          <div>
+            <span className="text-xs text-gray-500 uppercase font-semibold block">Active Verified Token</span>
+            <span className="font-mono font-bold text-[#8B0000] text-base">{form.verifiedToken}</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onBackToToken}
+          className="text-xs text-[#8B0000] hover:underline font-semibold flex items-center gap-1"
+        >
+          <RotateCcw className="w-3.5 h-3.5" /> Change Token
+        </button>
+      </div>
+
+      {/* ── SECTION 1: Voyage Information ── */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-7">
+        <div className="flex items-center gap-3 mb-5 pb-3 border-b border-gray-100">
+          <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center">
+            <Ship className="w-5 h-5 text-[#8B0000]" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">1. Voyage Information</h2>
+            <p className="text-xs text-gray-500">Select the vessel voyage reference and enter the rotation number</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <Field label="Voyage Reference" required error={errors.voyageReferenceId}>
+            {loadingRefs ? (
+              <div className="flex items-center gap-2 text-sm text-gray-500 py-2">
+                <Spinner className="w-4 h-4" /> Loading voyage references…
+              </div>
+            ) : (
+              <Select
+                value={form.voyageReferenceId}
+                onChange={handleVoyageChange}
+                options={voyageRefs.map(v => ({ value: v.id, label: v.voyageRef }))}
+                placeholder="— Select voyage reference —"
+                error={!!errors.voyageReferenceId}
+              />
+            )}
+          </Field>
+
+          <Field label="Rotation Number" required error={errors.rotationNumber}>
+            <Input
+              value={form.rotationNumber}
+              onChange={v => {
+                onChange('rotationNumber', v);
+                if (errors.rotationNumber) setErrors(prev => ({ ...prev, rotationNumber: '' }));
+              }}
+              placeholder="e.g. ROT-2026-001"
+              error={!!errors.rotationNumber}
+            />
+          </Field>
+        </div>
+      </div>
+
+      {/* ── SECTION 2: Booking Party Details ── */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-7">
+        <div className="flex items-center gap-3 mb-5 pb-3 border-b border-gray-100">
           <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center">
             <User className="w-5 h-5 text-[#8B0000]" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Booking Party Details</h2>
-            <p className="text-sm text-gray-500">Contact information for this booking</p>
+            <h2 className="text-lg font-bold text-gray-900">2. Booking Party (Client Details)</h2>
+            <p className="text-xs text-gray-500">The registered company or person booking the slot</p>
           </div>
         </div>
 
-        <div className="flex flex-col gap-5">
-          <Field label="Booking Done Party" required error={errors.bookingParty}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <Field label="Booking Done Party (Company / Individual Name)" required error={errors.bookingParty}>
             <Input
-              value={data.bookingParty}
-              onChange={v => { onChange('bookingParty', v); if (errors.bookingParty) setErrors(p => ({ ...p, bookingParty: '' })); }}
-              placeholder="Company or individual name"
+              value={form.bookingParty}
+              onChange={v => {
+                onChange('bookingParty', v);
+                if (errors.bookingParty) setErrors(prev => ({ ...prev, bookingParty: '' }));
+              }}
+              placeholder="e.g. Al Etihad Logistics LLC"
               error={!!errors.bookingParty}
             />
           </Field>
 
-          <Field label="Email" required error={errors.bookingPartyEmail}>
+          <Field label="Email Address (For Booking Confirmation)" required error={errors.bookingPartyEmail}>
             <Input
               type="email"
-              value={data.bookingPartyEmail}
-              onChange={v => { onChange('bookingPartyEmail', v); if (errors.bookingPartyEmail) setErrors(p => ({ ...p, bookingPartyEmail: '' })); }}
-              placeholder="booking@company.com"
+              value={form.bookingPartyEmail}
+              onChange={v => {
+                onChange('bookingPartyEmail', v);
+                if (errors.bookingPartyEmail) setErrors(prev => ({ ...prev, bookingPartyEmail: '' }));
+              }}
+              placeholder="operations@company.com"
               error={!!errors.bookingPartyEmail}
             />
           </Field>
         </div>
+      </div>
 
-        <div className="flex justify-between mt-8">
+      {/* ── SECTION 3: Container Details ── */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-7">
+        <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-100 flex-wrap gap-2">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center">
+              <Package className="w-5 h-5 text-[#8B0000]" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">3. Container Details</h2>
+              <p className="text-xs text-gray-500">
+                {form.containers.length} container{form.containers.length !== 1 ? 's' : ''} added
+              </p>
+            </div>
+          </div>
           <button
-            onClick={onBack}
-            className="flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition text-sm"
+            type="button"
+            onClick={addContainer}
+            className="flex items-center gap-1.5 px-4 py-2 bg-amber-50 hover:bg-amber-100 text-[#8B0000] border border-[#C9A84C]/50 rounded-lg text-xs font-bold transition shadow-sm"
           >
-            <ChevronLeft className="w-4 h-4" /> BACK
-          </button>
-          <button
-            onClick={() => validate() && onNext()}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#8B0000] text-white rounded-lg font-bold hover:bg-[#7a0000] transition text-sm"
-          >
-            NEXT <ChevronRight className="w-4 h-4" />
+            <Plus className="w-4 h-4" /> ADD ANOTHER CONTAINER
           </button>
         </div>
+
+        {loadingPorts ? (
+          <div className="flex items-center gap-3 py-10 justify-center text-gray-500">
+            <Spinner /> Loading ports directory…
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {form.containers.map((c, idx) => (
+              <ContainerCard
+                key={idx}
+                idx={idx}
+                container={c}
+                ports={ports}
+                onChange={updateContainer}
+                onRemove={removeContainer}
+                canRemove={form.containers.length > 1}
+              />
+            ))}
+
+            <button
+              type="button"
+              onClick={addContainer}
+              className="flex items-center gap-2 px-5 py-3 border-2 border-dashed border-[#C9A84C] text-[#8B0000] rounded-xl font-bold hover:bg-amber-50/50 transition text-sm w-full justify-center"
+            >
+              <Plus className="w-4 h-4" /> ADD ANOTHER CONTAINER
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Global Validation Alert */}
+      {globalError && (
+        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-medium">
+          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <span>{globalError}</span>
+        </div>
+      )}
+
+      {/* Bottom Actions */}
+      <div className="flex items-center justify-between pt-2">
+        <button
+          type="button"
+          onClick={onBackToToken}
+          className="flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-100 transition text-sm"
+        >
+          <ChevronLeft className="w-4 h-4" /> Back to Token
+        </button>
+
+        <button
+          type="button"
+          onClick={validateAndProceed}
+          className="flex items-center gap-2 px-7 py-3 bg-[#8B0000] text-white rounded-xl font-bold hover:bg-[#7a0000] transition text-sm shadow-md"
+        >
+          CONTINUE TO REVIEW <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
 }
 
 /* ─────────────────────────────────────────────
-   Step 5 — Review & Confirm
+   Step 3 — Unified Review & Confirmed (SAME PAGE)
 ───────────────────────────────────────────── */
-function StepReview({
+function StepReviewAndConfirmed({
   data,
+  confirmation,
   onBack,
   onSubmit,
+  onReset,
 }: {
   data: BookingFormData;
+  confirmation: ConfirmationResult | null;
   onBack: () => void;
   onSubmit: () => Promise<void>;
+  onReset: () => void;
 }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [expanded, setExpanded] = useState<number | null>(null);
+  const printRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async () => {
     if (submitting) return;
@@ -772,153 +793,11 @@ function StepReview({
     }
   };
 
-  return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 sm:p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center">
-            <ClipboardList className="w-5 h-5 text-[#8B0000]" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">Review & Confirm</h2>
-            <p className="text-sm text-gray-500">Please verify all details before submitting</p>
-          </div>
-        </div>
-
-        {/* Token */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center gap-3 mb-5">
-          <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-          <div>
-            <p className="text-xs text-green-600 font-semibold uppercase tracking-wide">Verified Token</p>
-            <p className="font-mono font-bold text-green-800">{data.verifiedToken}</p>
-          </div>
-        </div>
-
-        {/* Voyage */}
-        <div className="rounded-lg border border-gray-200 p-4 mb-4">
-          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Voyage Information</h3>
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <p className="text-gray-500 text-xs">Voyage Reference</p>
-              <p className="font-semibold text-gray-900">{data.voyageRef || '—'}</p>
-            </div>
-            <div>
-              <p className="text-gray-500 text-xs">Rotation Number</p>
-              <p className="font-semibold text-gray-900">{data.rotationNumber || '—'}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Booking Party */}
-        <div className="rounded-lg border border-gray-200 p-4 mb-4">
-          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Booking Party</h3>
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <p className="text-gray-500 text-xs">Name</p>
-              <p className="font-semibold text-gray-900">{data.bookingParty || '—'}</p>
-            </div>
-            <div>
-              <p className="text-gray-500 text-xs">Email</p>
-              <p className="font-semibold text-gray-900 break-all">{data.bookingPartyEmail || '—'}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Containers */}
-        <div className="rounded-lg border border-gray-200 p-4 mb-6">
-          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
-            Containers ({data.containers.length})
-          </h3>
-          <div className="space-y-2">
-            {data.containers.map((c, i) => (
-              <div key={i} className="text-sm">
-                <button
-                  onClick={() => setExpanded(expanded === i ? null : i)}
-                  className="w-full flex items-center justify-between p-2 rounded hover:bg-gray-50 transition text-left"
-                >
-                  <span className="font-medium text-gray-800">
-                    {i + 1}. {c.containerNumber || 'Container ' + (i + 1)} — {c.iso || '?'} — {c.pol} → {c.pod}
-                  </span>
-                  <ChevronRight
-                    className={`w-4 h-4 text-gray-400 transition-transform ${expanded === i ? 'rotate-90' : ''}`}
-                  />
-                </button>
-                {expanded === i && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="bg-gray-50 rounded p-3 mt-1 grid grid-cols-2 gap-2 text-xs"
-                  >
-                    {[
-                      ['POL', c.pol], ['POD', c.pod], ['Line', c.line],
-                      ['Container No.', c.containerNumber], ['CHK', c.chk], ['ISO', c.iso],
-                      ['POD Agent', c.podAgentName], ['Email', c.email],
-                      ['MUB', c.mub], ['IMCO', c.imco], ['UN MO', c.unMo],
-                      ['Temp', c.temperature], ['VGM WT', c.vgmWeight ? `${c.vgmWeight} ${c.uom}` : ''],
-                    ].map(([k, v]) => v ? (
-                      <div key={k}>
-                        <span className="text-gray-400">{k}: </span>
-                        <span className="font-medium text-gray-700">{v}</span>
-                      </div>
-                    ) : null)}
-                  </motion.div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {submitError && (
-          <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-4">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" /> {submitError}
-          </div>
-        )}
-
-        <div className="flex justify-between">
-          <button
-            onClick={onBack}
-            disabled={submitting}
-            className="flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition text-sm disabled:opacity-60"
-          >
-            <ChevronLeft className="w-4 h-4" /> EDIT DETAILS
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={submitting}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#8B0000] text-white rounded-lg font-bold hover:bg-[#7a0000] transition text-sm disabled:opacity-70"
-          >
-            {submitting ? (
-              <><Spinner className="w-4 h-4" /> Submitting…</>
-            ) : (
-              <>CONFIRM & SUBMIT <ChevronRight className="w-4 h-4" /></>
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Step 6 — Confirmed
-───────────────────────────────────────────── */
-function StepConfirmed({
-  data,
-  confirmation,
-}: {
-  data: BookingFormData;
-  confirmation: ConfirmationResult;
-}) {
-  const printRef = useRef<HTMLDivElement>(null);
-
   const handlePrint = () => {
     window.print();
   };
 
-  const handleDownloadPDF = () => {
-    window.print();
-  };
+  const isConfirmed = !!confirmation;
 
   return (
     <>
@@ -931,132 +810,224 @@ function StepConfirmed({
         }
       `}</style>
 
-      <div className="w-full max-w-2xl mx-auto">
-        {/* Success animation */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-          className="text-center mb-6 no-print"
-        >
-          <div className="inline-flex w-20 h-20 rounded-full bg-green-100 items-center justify-center mb-4">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 250 }}
-            >
-              <CheckCircle2 className="w-12 h-12 text-green-500" />
-            </motion.div>
-          </div>
-          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">BOOKING CONFIRMED</h2>
-          <p className="text-gray-500 mt-2 text-sm">Your slot has been successfully booked with Ports Shipping LLC</p>
-        </motion.div>
+      <div className="w-full max-w-3xl mx-auto space-y-6">
+        {/* If Confirmed: Show Top Celebration Banner */}
+        {isConfirmed && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+            className="text-center mb-4 no-print"
+          >
+            <div className="inline-flex w-20 h-20 rounded-full bg-green-100 items-center justify-center mb-3">
+              <CheckCircle2 className="w-12 h-12 text-green-600" />
+            </div>
+            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">BOOKING CONFIRMED</h2>
+            <p className="text-gray-500 mt-1 text-sm">
+              Your container slot has been successfully registered with Ports Shipping LLC
+            </p>
+          </motion.div>
+        )}
 
-        {/* Confirmation card */}
-        <div ref={printRef} className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8 print-area">
-
-          {/* Print-only header */}
+        {/* Unified Card (Review & Confirmed) */}
+        <div ref={printRef} className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 sm:p-8 print-area">
+          {/* Print Header */}
           <div className="hidden print:block mb-6 pb-4 border-b border-gray-200">
             <h1 className="text-2xl font-extrabold text-gray-900">Ports Shipping LLC</h1>
-            <p className="text-sm text-gray-500">Booking Confirmation</p>
+            <p className="text-sm text-gray-500">Official Booking Slot Confirmation</p>
           </div>
 
-          {/* Confirmation Number & Token Number Banner */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-5 px-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-[#C9A84C]/40 mb-6 text-center">
-            <div className="border-b sm:border-b-0 sm:border-r border-[#C9A84C]/30 pb-3 sm:pb-0 sm:pr-4">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Booking Confirmation No.</p>
-              <p className="text-2xl sm:text-3xl font-black text-[#8B0000] tracking-wider">{confirmation.confirmationNumber}</p>
+          {/* Golden Confirmation Banner (when Confirmed) */}
+          {isConfirmed ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-5 px-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-[#C9A84C]/50 mb-6 text-center">
+              <div className="border-b sm:border-b-0 sm:border-r border-[#C9A84C]/30 pb-3 sm:pb-0 sm:pr-4">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">
+                  Booking Confirmation No.
+                </p>
+                <p className="text-2xl sm:text-3xl font-black text-[#8B0000] tracking-wider">
+                  {confirmation.confirmationNumber}
+                </p>
+              </div>
+              <div className="pt-2 sm:pt-0 sm:pl-4">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">
+                  Booking Token Reference
+                </p>
+                <p className="text-xl sm:text-2xl font-black text-[#C9A84C] font-mono tracking-wider">
+                  {data.verifiedToken || '—'}
+                </p>
+              </div>
             </div>
-            <div className="pt-2 sm:pt-0 sm:pl-4">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Booking Token / Ref</p>
-              <p className="text-xl sm:text-2xl font-black text-[#C9A84C] font-mono tracking-wider">{data.verifiedToken || '—'}</p>
+          ) : (
+            /* Review Header */
+            <div className="flex items-center gap-3 mb-6 pb-3 border-b border-gray-100">
+              <div className="w-10 h-10 rounded-lg bg-[#8B0000]/10 flex items-center justify-center">
+                <ClipboardList className="w-5 h-5 text-[#8B0000]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Review Booking Details</h2>
+                <p className="text-xs text-gray-500">
+                  Please verify all information below before submitting your booking
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Token Banner */}
+          {!isConfirmed && (
+            <div className="bg-amber-50 border border-[#C9A84C]/50 rounded-lg p-3.5 flex items-center gap-3 mb-6">
+              <CheckCircle2 className="w-5 h-5 text-[#8B0000] flex-shrink-0" />
+              <div>
+                <p className="text-xs text-gray-600 font-semibold uppercase tracking-wide">Booking Token</p>
+                <p className="font-mono font-bold text-[#8B0000] text-sm">{data.verifiedToken}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Details Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+              <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2">Voyage Information</p>
+              <div className="space-y-1.5 text-sm">
+                <p><span className="text-gray-500 text-xs">Voyage Ref:</span> <strong className="text-gray-900">{data.voyageRef || '—'}</strong></p>
+                <p><span className="text-gray-500 text-xs">Rotation No:</span> <strong className="text-gray-900">{data.rotationNumber || '—'}</strong></p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+              <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2">Booking Party (Client)</p>
+              <div className="space-y-1.5 text-sm">
+                <p><span className="text-gray-500 text-xs">Company/Name:</span> <strong className="text-gray-900">{data.bookingParty || '—'}</strong></p>
+                <p><span className="text-gray-500 text-xs">Email:</span> <strong className="text-gray-900 break-all">{data.bookingPartyEmail || '—'}</strong></p>
+              </div>
             </div>
           </div>
 
-          {/* Details grid */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Voyage Reference</p>
-              <p className="font-bold text-gray-800 mt-0.5">{data.voyageRef}</p>
+          {/* Containers Section */}
+          <div className="rounded-xl border border-gray-200 overflow-hidden mb-6">
+            <div className="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Containers ({data.containers.length})
+              </span>
+              <span className="text-xs text-gray-500 font-medium">Click to inspect container specs</span>
             </div>
-            <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Rotation Number</p>
-              <p className="font-bold text-gray-800 mt-0.5">{data.rotationNumber}</p>
-            </div>
-            <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Booking Party (Client)</p>
-              <p className="font-bold text-gray-800 mt-0.5">{data.bookingParty}</p>
-            </div>
-            <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Booking Token</p>
-              <p className="font-bold text-[#C9A84C] font-mono mt-0.5">{data.verifiedToken}</p>
-            </div>
-            <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Client Email</p>
-              <p className="font-bold text-gray-800 mt-0.5">{data.bookingPartyEmail}</p>
-            </div>
-            <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Containers</p>
-              <p className="font-bold text-gray-800 mt-0.5">{data.containers.length} container{data.containers.length !== 1 ? 's' : ''}</p>
+
+            <div className="divide-y divide-gray-100">
+              {data.containers.map((c, i) => (
+                <div key={i} className="text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setExpanded(expanded === i ? null : i)}
+                    className="w-full flex items-center justify-between p-3.5 hover:bg-gray-50 transition text-left"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-5 h-5 rounded-full bg-[#8B0000] text-white flex items-center justify-center text-xs font-bold">
+                        {i + 1}
+                      </span>
+                      <span className="font-semibold text-gray-900 font-mono">
+                        {c.containerNumber || 'Container ' + (i + 1)}
+                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded bg-gray-200 text-gray-700 font-medium">
+                        {c.iso || '—'}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {c.pol} → {c.pod}
+                      </span>
+                    </div>
+                    <ChevronRight
+                      className={`w-4 h-4 text-gray-400 transition-transform ${expanded === i ? 'rotate-90' : ''}`}
+                    />
+                  </button>
+
+                  {(expanded === i || isConfirmed) && (
+                    <div className="bg-gray-50 px-4 py-3 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                      <div><span className="text-gray-400">POL: </span><span className="font-medium text-gray-800">{c.pol}</span></div>
+                      <div><span className="text-gray-400">POD: </span><span className="font-medium text-gray-800">{c.pod}</span></div>
+                      <div><span className="text-gray-400">Line: </span><span className="font-medium text-gray-800">{c.line || '—'}</span></div>
+                      <div><span className="text-gray-400">CHK: </span><span className="font-medium text-gray-800">{c.chk || '—'}</span></div>
+                      <div><span className="text-gray-400">POD Agent: </span><span className="font-medium text-gray-800">{c.podAgentName || '—'}</span></div>
+                      <div><span className="text-gray-400">Agent Email: </span><span className="font-medium text-gray-800">{c.email || '—'}</span></div>
+                      <div><span className="text-gray-400">IMCO: </span><span className="font-medium text-gray-800">{c.imco || '—'}</span></div>
+                      <div><span className="text-gray-400">VGM WT: </span><span className="font-medium text-gray-800">{c.vgmWeight ? `${c.vgmWeight} ${c.uom}` : '—'}</span></div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Container summary table */}
-          <div className="mb-6 overflow-x-auto">
-            <table className="w-full text-xs border-collapse">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="text-left p-2 border border-gray-200 font-semibold text-gray-600">#</th>
-                  <th className="text-left p-2 border border-gray-200 font-semibold text-gray-600">Container No.</th>
-                  <th className="text-left p-2 border border-gray-200 font-semibold text-gray-600">ISO</th>
-                  <th className="text-left p-2 border border-gray-200 font-semibold text-gray-600">POL</th>
-                  <th className="text-left p-2 border border-gray-200 font-semibold text-gray-600">POD</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.containers.map((c, i) => (
-                  <tr key={i} className={i % 2 === 0 ? '' : 'bg-gray-50'}>
-                    <td className="p-2 border border-gray-200">{i + 1}</td>
-                    <td className="p-2 border border-gray-200 font-mono">{c.containerNumber}</td>
-                    <td className="p-2 border border-gray-200">{c.iso}</td>
-                    <td className="p-2 border border-gray-200">{c.pol}</td>
-                    <td className="p-2 border border-gray-200">{c.pod}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* Submission Error Banner */}
+          {submitError && (
+            <div className="flex items-center gap-2 p-3.5 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm mb-5 font-medium">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <span>{submitError}</span>
+            </div>
+          )}
 
-          {/* Footer message */}
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800 mb-2">
-            <p>
-              Your booking has been successfully submitted to Ports Shipping LLC.
-              A confirmation has been sent to <strong>{data.bookingPartyEmail}</strong>.
-            </p>
-          </div>
-          <p className="text-xs text-gray-400 text-right">
-            Submitted: {new Date(confirmation.submittedAt).toLocaleString()}
-          </p>
-        </div>
+          {/* Post-confirmation message */}
+          {isConfirmed ? (
+            <div className="space-y-4">
+              <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-900">
+                <p>
+                  A confirmation email with your booking confirmation number and token reference has been dispatched to{' '}
+                  <strong>{data.bookingPartyEmail}</strong>.
+                </p>
+              </div>
 
-        {/* Action buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-6 no-print">
-          <button
-            onClick={handlePrint}
-            className="flex-1 flex items-center justify-center gap-2 px-5 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition"
-          >
-            <Printer className="w-5 h-5" /> PRINT CONFIRMATION
-          </button>
-          <button
-            onClick={handleDownloadPDF}
-            className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-[#C9A84C] text-white rounded-xl font-bold hover:bg-[#b8942e] transition"
-          >
-            <Download className="w-5 h-5" /> DOWNLOAD PDF
-          </button>
-        </div>
+              <div className="flex flex-col sm:flex-row gap-3 pt-2 no-print">
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="flex-1 flex items-center justify-center gap-2 px-5 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition text-sm"
+                >
+                  <Printer className="w-4 h-4" /> PRINT CONFIRMATION
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-[#C9A84C] text-white rounded-xl font-bold hover:bg-[#b8942e] transition text-sm shadow"
+                >
+                  <Download className="w-4 h-4" /> DOWNLOAD PDF
+                </button>
+              </div>
 
-        <div className="text-center mt-4 no-print">
-          <a href="/" className="text-sm text-[#8B0000] hover:underline font-medium">← Return to Home</a>
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs no-print">
+                <button
+                  type="button"
+                  onClick={onReset}
+                  className="text-[#8B0000] hover:underline font-bold"
+                >
+                  + Book Another Slot
+                </button>
+                <a href="/" className="text-gray-500 hover:text-gray-800 font-medium">
+                  ← Return to Home
+                </a>
+              </div>
+            </div>
+          ) : (
+            /* Action Buttons before submission */
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="button"
+                onClick={onBack}
+                disabled={submitting}
+                className="flex items-center gap-2 px-5 py-2.5 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition text-sm disabled:opacity-60"
+              >
+                <ChevronLeft className="w-4 h-4" /> EDIT DETAILS
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="flex items-center gap-2 px-7 py-3 bg-[#8B0000] text-white rounded-xl font-bold hover:bg-[#7a0000] transition text-sm disabled:opacity-70 shadow-md"
+              >
+                {submitting ? (
+                  <><Spinner className="w-4 h-4" /> SUBMITTING BOOKING…</>
+                ) : (
+                  <>CONFIRM &amp; SUBMIT BOOKING <ChevronRight className="w-4 h-4" /></>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -1064,7 +1035,7 @@ function StepConfirmed({
 }
 
 /* ─────────────────────────────────────────────
-   Main Page
+   Main Booking Page Component
 ───────────────────────────────────────────── */
 const INITIAL_FORM: BookingFormData = {
   tokenId: '',
@@ -1078,8 +1049,8 @@ const INITIAL_FORM: BookingFormData = {
 };
 
 export default function BookSlotPage() {
-  const [step, setStep] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = forward, -1 = back
+  const [step, setStep] = useState(0); // 0: Verify Token, 1: Booking Details (Voyage + Containers + Party), 2: Review & Confirmed
+  const [direction, setDirection] = useState(1);
   const [form, setForm] = useState<BookingFormData>(INITIAL_FORM);
   const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(null);
 
@@ -1102,6 +1073,13 @@ export default function BookSlotPage() {
     goNext();
   }, [goNext]);
 
+  const handleReset = useCallback(() => {
+    setForm(INITIAL_FORM);
+    setConfirmation(null);
+    setDirection(-1);
+    setStep(0);
+  }, []);
+
   const handleSubmit = useCallback(async () => {
     const payload = {
       tokenId: form.tokenId,
@@ -1120,51 +1098,47 @@ export default function BookSlotPage() {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `Submission failed (${res.status}). Please try again.`);
+      throw new Error(err.message || err.error || `Submission failed (${res.status}). Please try again.`);
     }
 
     const data = await res.json();
     setConfirmation({
       confirmationNumber: data.confirmationNumber,
       bookingId: data.bookingId,
-      submittedAt: data.submittedAt || new Date().toISOString(),
+      submittedAt: data.createdAt || new Date().toISOString(),
     });
-    setDirection(1);
-    setStep(5);
   }, [form]);
 
   const slideVariants = {
-    enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
+    enter: (dir: number) => ({ x: dir > 0 ? 50 : -50, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
+    exit: (dir: number) => ({ x: dir > 0 ? -50 : 50, opacity: 0 }),
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-16">
       {/* Hero header */}
       <div className="bg-gradient-to-r from-[#8B0000] via-[#6b0000] to-[#4a0000] text-white py-10 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 mb-3">
+          <div className="flex items-center justify-center gap-3 mb-2.5">
             <CalendarCheck className="w-8 h-8 text-[#C9A84C]" />
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Book a Slot</h1>
           </div>
           <p className="text-red-200 text-sm sm:text-base">
-            Ports Shipping LLC — Secure your container slot in minutes
+            Ports Shipping LLC — Secure container slot management system
           </p>
         </div>
       </div>
 
-      {/* Step indicator */}
-      {step < 6 && (
-        <div className="bg-white border-b border-gray-100 shadow-sm py-4 px-4">
-          <div className="max-w-4xl mx-auto">
-            <StepIndicator current={step} />
-          </div>
+      {/* Step Indicator */}
+      <div className="bg-white border-b border-gray-100 shadow-sm py-4 px-4 mb-8">
+        <div className="max-w-3xl mx-auto">
+          <StepIndicator current={step} />
         </div>
-      )}
+      </div>
 
-      {/* Main content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* Main Form Content */}
+      <div className="max-w-4xl mx-auto px-4">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={step}
@@ -1173,48 +1147,33 @@ export default function BookSlotPage() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.28, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
           >
             {step === 0 && (
               <StepVerifyToken onVerified={handleTokenVerified} />
             )}
+
             {step === 1 && (
-              <StepVoyageInfo
-                data={{
-                  voyageReferenceId: form.voyageReferenceId,
-                  voyageRef: form.voyageRef,
-                  rotationNumber: form.rotationNumber,
-                }}
+              <StepBookingDetails
+                form={form}
                 onChange={updateField}
-                onNext={goNext}
-                onBack={goBack}
-              />
-            )}
-            {step === 2 && (
-              <StepContainerDetails
-                containers={form.containers}
                 onContainersChange={c => setForm(prev => ({ ...prev, containers: c }))}
                 onNext={goNext}
-                onBack={goBack}
+                onBackToToken={() => {
+                  setDirection(-1);
+                  setStep(0);
+                }}
               />
             )}
-            {step === 3 && (
-              <StepBookingParty
-                data={{ bookingParty: form.bookingParty, bookingPartyEmail: form.bookingPartyEmail }}
-                onChange={updateField}
-                onNext={goNext}
-                onBack={goBack}
-              />
-            )}
-            {step === 4 && (
-              <StepReview
+
+            {step === 2 && (
+              <StepReviewAndConfirmed
                 data={form}
+                confirmation={confirmation}
                 onBack={goBack}
                 onSubmit={handleSubmit}
+                onReset={handleReset}
               />
-            )}
-            {step === 5 && confirmation && (
-              <StepConfirmed data={form} confirmation={confirmation} />
             )}
           </motion.div>
         </AnimatePresence>
