@@ -90,10 +90,11 @@ export default function BookingTokensPage() {
       const json = await res.json();
       const tokenStr = json.token ?? json.data?.token ?? json.data?.id;
       setGeneratedToken(tokenStr);
+      // Optimistic update — prepend to list immediately
+      setTokens((prev) => [json, ...prev]);
       showToast('success', 'Token generated successfully');
       setExpiresAt('');
       setNotes('');
-      fetchTokens();
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Generation failed');
     } finally {

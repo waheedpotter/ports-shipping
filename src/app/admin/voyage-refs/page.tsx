@@ -54,15 +54,18 @@ export default function VoyageRefsPage() {
       const res = await fetch('/api/admin/voyage-refs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ voyageRef: newRef.trim() }),
+        body: JSON.stringify({ voyageRef: newRef.trim().toUpperCase() }),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error ?? 'Add failed');
       }
-      showToast('success', `Voyage ref "${newRef.trim()}" added`);
+      const created: VoyageRef = await res.json();
+      // Optimistic update — add directly to state so it shows immediately
+      // (Vercel SQLite /tmp may not be visible on re-fetch from another instance)
+      setVoyageRefs((prev) => [created, ...prev]);
+      showToast('success', `Voyage ref "${created.voyageRef}" added`);
       setNewRef('');
-      fetchVoyageRefs();
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Add failed');
     } finally {
