@@ -23,6 +23,12 @@ export default function PortsPage() {
   const [portName, setPortName] = useState('');
   const [adding, setAdding] = useState(false);
 
+  // Edit modal
+  const [editPort, setEditPort] = useState<Port | null>(null);
+  const [editCode, setEditCode] = useState('');
+  const [editName, setEditName] = useState('');
+  const [saving, setSaving] = useState(false);
+
   // Toast
   const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
 
@@ -65,14 +71,52 @@ export default function PortsPage() {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error ?? 'Add failed');
       }
-      showToast('success', `Port "${portCode.trim().toUpperCase()}" added`);
+      const created: Port = await res.json();
+      // Optimistic update — prepend immediately (Vercel /tmp instance issue)
+      setPorts((prev) => [created, ...prev]);
+      showToast('success', `Port "${created.portCode}" added`);
       setPortCode('');
       setPortName('');
-      fetchPorts();
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Add failed');
     } finally {
       setAdding(false);
+    }
+  }
+
+  // ── Open Edit Modal ──
+  function openEdit(p: Port) {
+    setEditPort(p);
+    setEditCode(p.portCode);
+    setEditName(p.portName ?? '');
+  }
+
+  // ── Save Edit ──
+  async function handleSaveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editPort || !editCode.trim()) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/ports/${editPort.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          portCode: editCode.trim().toUpperCase(),
+          portName: editName.trim() || null,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error ?? 'Update failed');
+      }
+      const updated: Port = await res.json();
+      setPorts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+      showToast('success', `Port "${updated.portCode}" updated`);
+      setEditPort(null);
+    } catch (e: unknown) {
+      showToast('error', e instanceof Error ? e.message : 'Update failed');
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -86,8 +130,9 @@ export default function PortsPage() {
         body: JSON.stringify({ active: newActive }),
       });
       if (!res.ok) throw new Error('Update failed');
+      const updated: Port = await res.json();
+      setPorts((prev) => prev.map((p2) => (p2.id === updated.id ? updated : p2)));
       showToast('success', `Port ${newActive ? 'activated' : 'deactivated'}`);
-      fetchPorts();
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Update failed');
     }
@@ -105,8 +150,8 @@ export default function PortsPage() {
     try {
       const res = await fetch(`/api/admin/ports/${p.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
+      setPorts((prev) => prev.filter((p2) => p2.id !== p.id));
       showToast('success', 'Port deleted');
-      fetchPorts();
     } catch (e: unknown) {
       showToast('error', e instanceof Error ? e.message : 'Delete failed');
     }
@@ -127,6 +172,67 @@ export default function PortsPage() {
         </div>
       )}
 
+      {/* Edit Modal */}
+      {editPort && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold text-gray-900">Edit Port</h2>
+              <button
+                onClick={() => setEditPort(null)}
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none"
+              >
+                ✕
+              </button>
+            </div>
+            <form onSubmit={handleSaveEdit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                  Port Code <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={editCode}
+                  onChange={(e) => setEditCode(e.target.value.toUpperCase())}
+                  maxLength={10}
+                  required
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
+                  placeholder="e.g. AEJEA"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                  Port Name <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B0000]"
+                  placeholder="e.g. Jebel Ali, Dubai"
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditPort(null)}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving || !editCode.trim()}
+                  className="flex-1 px-4 py-2.5 bg-[#8B0000] text-white rounded-lg text-sm font-semibold hover:bg-red-900 disabled:opacity-50 transition"
+                >
+                  {saving ? 'Saving…' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Ports</h1>
@@ -142,7 +248,7 @@ export default function PortsPage() {
             <input
               type="text"
               value={portCode}
-              onChange={(e) => setPortCode(e.target.value)}
+              onChange={(e) => setPortCode(e.target.value.toUpperCase())}
               placeholder="e.g. AEJEA"
               maxLength={10}
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B0000] uppercase font-mono"
@@ -167,9 +273,6 @@ export default function PortsPage() {
             {adding ? 'Adding…' : '🏗️ ADD PORT'}
           </button>
         </form>
-        <p className="text-xs text-gray-400 mt-3">
-          Note: Initial ports are seeded from the backend. Only add ports that are not already listed below.
-        </p>
       </div>
 
       {/* Search + Table */}
@@ -190,7 +293,6 @@ export default function PortsPage() {
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Port Code</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Port Name</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Created</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
@@ -200,7 +302,7 @@ export default function PortsPage() {
               {loading ? (
                 Array.from({ length: 8 }).map((_, i) => (
                   <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    {Array.from({ length: 5 }).map((__, j) => (
+                    {Array.from({ length: 4 }).map((__, j) => (
                       <td key={j} className="px-4 py-3">
                         <div className="h-4 bg-gray-200 rounded animate-pulse" />
                       </td>
@@ -209,15 +311,19 @@ export default function PortsPage() {
                 ))
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-12 text-gray-400">
+                  <td colSpan={4} className="text-center py-12 text-gray-400">
                     {searchTerm ? 'No ports match your search.' : 'No ports yet. Add one above.'}
                   </td>
                 </tr>
               ) : (
                 filtered.map((p, i) => (
                   <tr key={p.id} className={`${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-amber-50 transition-colors`}>
-                    <td className="px-4 py-3 font-mono font-bold text-[#8B0000]">{p.portCode}</td>
-                    <td className="px-4 py-3 text-gray-700">{p.portName ?? <span className="text-gray-400 italic text-xs">—</span>}</td>
+                    <td className="px-4 py-3">
+                      <span className="font-mono font-bold text-[#8B0000]">{p.portCode}</span>
+                      {p.portName && (
+                        <span className="ml-2 text-xs text-gray-400">{p.portName}</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-center">
                       <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                         p.active
@@ -232,6 +338,12 @@ export default function PortsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => openEdit(p)}
+                          className="px-3 py-1 bg-blue-50 text-blue-700 rounded text-xs font-semibold hover:bg-blue-100 transition"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => handleToggle(p)}
                           className={`px-3 py-1 rounded text-xs font-semibold transition ${
