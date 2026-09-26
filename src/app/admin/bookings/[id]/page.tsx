@@ -284,7 +284,7 @@ export default function BookingDetailPage() {
                             <dl className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                               <InfoField label="POL" value={c.pol} />
                               <InfoField label="POD" value={c.pod} />
-                              <InfoField label="Line" value={c.line} />
+                              <InfoField label="Code Shipping Line" value={c.line} />
                               <InfoField label="Container No" value={cNo} />
                               <InfoField label="CHK" value={c.chk} />
                               <InfoField label="ISO" value={c.iso} />

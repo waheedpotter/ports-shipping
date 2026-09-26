@@ -410,7 +410,7 @@ function ContainerCard({
             placeholder="— ISO Type —"
           />
         </Field>
-        <Field label="Shipping Line">
+        <Field label="Code Shipping Line">
           <Input value={container.line} onChange={v => upd('line', v)} placeholder="e.g. Ports Shipping" />
         </Field>
         <Field label="CHK (Check Digit)">
@@ -474,6 +474,8 @@ function StepBookingDetails({
 }) {
   const [voyageRefs, setVoyageRefs] = useState<VoyageRef[]>([]);
   const [loadingRefs, setLoadingRefs] = useState(true);
+  const [rotationNumbers, setRotationNumbers] = useState<{ id: string; rotationNumber: string }[]>([]);
+  const [loadingRotations, setLoadingRotations] = useState(true);
   const [ports, setPorts] = useState<Port[]>([]);
   const [loadingPorts, setLoadingPorts] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -485,6 +487,12 @@ function StepBookingDetails({
       .then(d => setVoyageRefs(Array.isArray(d) ? d : []))
       .catch(() => setVoyageRefs([]))
       .finally(() => setLoadingRefs(false));
+
+    fetch('/api/booking/rotation-numbers', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => setRotationNumbers(Array.isArray(d) ? d : []))
+      .catch(() => setRotationNumbers([]))
+      .finally(() => setLoadingRotations(false));
 
     fetch('/api/booking/ports', { cache: 'no-store' })
       .then(r => r.json())
@@ -522,8 +530,8 @@ function StepBookingDetails({
     if (!form.voyageReferenceId) {
       e.voyageReferenceId = 'Please select a Voyage Reference.';
     }
-    if (!form.rotationNumber.trim()) {
-      e.rotationNumber = 'Rotation Number is required.';
+    if (!form.rotationNumber || !form.rotationNumber.trim()) {
+      e.rotationNumber = 'Please select a Rotation Number.';
     }
 
     // 2. Booking Party Validation
@@ -628,15 +636,22 @@ function StepBookingDetails({
           </Field>
 
           <Field label="Rotation Number" required error={errors.rotationNumber}>
-            <Input
-              value={form.rotationNumber}
-              onChange={v => {
-                onChange('rotationNumber', v);
-                if (errors.rotationNumber) setErrors(prev => ({ ...prev, rotationNumber: '' }));
-              }}
-              placeholder="e.g. ROT-2026-001"
-              error={!!errors.rotationNumber}
-            />
+            {loadingRotations ? (
+              <div className="flex items-center gap-2 text-sm text-gray-500 py-2">
+                <Spinner className="w-4 h-4" /> Loading rotation numbers…
+              </div>
+            ) : (
+              <Select
+                value={form.rotationNumber}
+                onChange={v => {
+                  onChange('rotationNumber', v);
+                  if (errors.rotationNumber) setErrors(prev => ({ ...prev, rotationNumber: '' }));
+                }}
+                options={rotationNumbers.map(r => ({ value: r.rotationNumber, label: r.rotationNumber }))}
+                placeholder="— Select rotation number —"
+                error={!!errors.rotationNumber}
+              />
+            )}
           </Field>
         </div>
       </div>
@@ -945,7 +960,7 @@ function StepReviewAndConfirmed({
                     <div className="bg-gray-50 px-4 py-3 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                       <div><span className="text-gray-400">POL: </span><span className="font-medium text-gray-800">{c.pol}</span></div>
                       <div><span className="text-gray-400">POD: </span><span className="font-medium text-gray-800">{c.pod}</span></div>
-                      <div><span className="text-gray-400">Line: </span><span className="font-medium text-gray-800">{c.line || '—'}</span></div>
+                      <div><span className="text-gray-400">Code Shipping Line: </span><span className="font-medium text-gray-800">{c.line || '—'}</span></div>
                       <div><span className="text-gray-400">CHK: </span><span className="font-medium text-gray-800">{c.chk || '—'}</span></div>
                       <div><span className="text-gray-400">POD Agent: </span><span className="font-medium text-gray-800">{c.podAgentName || '—'}</span></div>
                       <div><span className="text-gray-400">Agent Email: </span><span className="font-medium text-gray-800">{c.email || '—'}</span></div>

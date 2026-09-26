@@ -198,7 +198,7 @@ function buildEmailHtml(
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">#</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">POL</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">POD</th>
-                  <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">Line</th>
+                  <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">Code Shipping Line</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">Container No</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">CHK</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">ISO</th>

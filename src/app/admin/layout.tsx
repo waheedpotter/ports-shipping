@@ -24,6 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/bookings', label: '📋 Slot Bookings' },
     { href: '/admin/booking-tokens', label: '🏷️ Booking Tokens' },
     { href: '/admin/voyage-refs', label: '🚢 Voyage References' },
+    { href: '/admin/rotation-numbers', label: '🔄 Rotation Numbers' },
     { href: '/admin/ports', label: '🏗️ Ports' },
   ];
 
