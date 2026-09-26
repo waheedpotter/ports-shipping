@@ -419,8 +419,8 @@ function ContainerCard({
         <Field label="Agent Email">
           <Input type="email" value={container.email} onChange={v => upd('email', v)} placeholder="agent@example.com" />
         </Field>
-        <Field label="MUB">
-          <Input value={container.mub} onChange={v => upd('mub', v)} placeholder="MUB" />
+        <Field label="MOB No.">
+          <Input value={container.mub} onChange={v => upd('mub', v)} placeholder="MOB No." />
         </Field>
         <Field label="IMCO Class">
           <Input value={container.imco} onChange={v => upd('imco', v)} placeholder="e.g. 3.1" />

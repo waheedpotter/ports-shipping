@@ -290,7 +290,7 @@ export default function BookingDetailPage() {
                               <InfoField label="ISO" value={c.iso} />
                               <InfoField label="POD Agent" value={pAgent} />
                               <InfoField label="Agent Email" value={pAgentEmail} />
-                              <InfoField label="MUB" value={c.mub} />
+                              <InfoField label="MOB No." value={c.mub} />
                               <InfoField label="IMCO" value={c.imco} />
                               <InfoField label="UN MO" value={c.unMo} />
                               <InfoField label="Temp" value={c.temp || (c as any).temperature} />

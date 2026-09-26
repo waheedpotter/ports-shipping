@@ -361,8 +361,9 @@ export default function BookingsPage() {
                     <td className="px-4 py-3 font-mono text-[#8B0000] font-semibold whitespace-nowrap">
                       {(b as any).confirmationNumber || b.confirmationNo}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-gray-600">
-                      {new Date(b.createdAt).toLocaleDateString()}
+                    <td className="px-4 py-3 whitespace-nowrap text-gray-600 text-xs">
+                      <div>{new Date(b.createdAt).toLocaleDateString()}</div>
+                      <div className="text-gray-400">{new Date(b.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {(b as any).voyageReference?.voyageRef ?? b.voyageRef?.voyageRef ?? <span className="text-gray-400">—</span>}

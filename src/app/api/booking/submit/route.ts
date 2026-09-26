@@ -51,10 +51,12 @@ export async function POST(request: Request) {
       const voyageRef = await tx.voyageReference.findUnique({ where: { id: voyageReferenceId } });
       if (!voyageRef || !voyageRef.active) throw new Error('INVALID_VOYAGE_REF');
 
-      // Atomically increment counter
-      await tx.$executeRaw`UPDATE BookingCounter SET current = current + 1 WHERE id = 1`;
-      const counter = await tx.bookingCounter.findUnique({ where: { id: 1 } });
-      const confirmationNumber = `PSBK-${String(counter!.current).padStart(6, '0')}`;
+      // Atomically increment counter (using Prisma update — works on PostgreSQL & SQLite)
+      const counter = await tx.bookingCounter.update({
+        where: { id: 1 },
+        data: { current: { increment: 1 } },
+      });
+      const confirmationNumber = `PSBK-${String(counter.current).padStart(6, '0')}`;
 
       // Create booking with all containers
       const newBooking = await tx.booking.create({
