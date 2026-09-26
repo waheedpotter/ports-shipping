@@ -6,27 +6,35 @@ import { sendBookingConfirmation } from '@/lib/email';
 const containerSchema = z.object({
   pol: z.string().min(1, 'POL is required'),
   pod: z.string().min(1, 'POD is required'),
-  line: z.string().optional().default(''),
+  line: z.string().optional().nullable().default(''),
   containerNumber: z.string().min(1, 'Container number is required'),
-  chk: z.string().optional().default(''),
+  chk: z.string().optional().nullable().default(''),
   iso: z.string().min(1, 'ISO is required'),
-  podAgentName: z.string().optional().default(''),
-  email: z.string().email().optional().or(z.literal('')).default(''),
-  mub: z.string().optional().default(''),
-  imco: z.string().optional().default(''),
-  unMo: z.string().optional().default(''),
-  temperature: z.string().optional().default(''),
-  vgmWeight: z.number().optional().nullable(),
+  podAgentName: z.string().optional().nullable().default(''),
+  email: z.string().optional().nullable().default(''),
+  mub: z.string().optional().nullable().default(''),
+  imco: z.string().optional().nullable().default(''),
+  unMo: z.string().optional().nullable().default(''),
+  temperature: z.string().optional().nullable().default(''),
+  vgmWeight: z
+    .union([z.number(), z.string()])
+    .optional()
+    .nullable()
+    .transform((val) => {
+      if (val === null || val === undefined || val === '') return null;
+      const num = parseFloat(String(val).replace(/,/g, '').trim());
+      return isNaN(num) ? null : num;
+    }),
   uom: z.string().default('KG'),
 });
 
 const submitSchema = z.object({
-  tokenId: z.string().min(1),
-  voyageReferenceId: z.string().min(1),
-  rotationNumber: z.string().min(1),
-  bookingParty: z.string().min(1),
-  bookingPartyEmail: z.string().email(),
-  containers: z.array(containerSchema).min(1),
+  tokenId: z.string().trim().min(1, 'Token ID is required'),
+  voyageReferenceId: z.string().trim().min(1, 'Voyage reference is required'),
+  rotationNumber: z.string().trim().min(1, 'Rotation number is required'),
+  bookingParty: z.string().trim().min(1, 'Booking party is required'),
+  bookingPartyEmail: z.string().trim().email('Valid booking party email is required'),
+  containers: z.array(containerSchema).min(1, 'At least one container is required'),
 });
 
 export async function POST(request: Request) {
@@ -35,7 +43,9 @@ export async function POST(request: Request) {
     const parsed = submitSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid booking data', details: parsed.error.flatten() }, { status: 400 });
+      const fieldErrors = parsed.error.flatten().fieldErrors;
+      const firstError = Object.values(fieldErrors).flat()[0] || 'Invalid booking data';
+      return NextResponse.json({ error: String(firstError), details: fieldErrors }, { status: 400 });
     }
 
     const { tokenId, voyageReferenceId, rotationNumber, bookingParty, bookingPartyEmail, containers } = parsed.data;
@@ -51,10 +61,11 @@ export async function POST(request: Request) {
       const voyageRef = await tx.voyageReference.findUnique({ where: { id: voyageReferenceId } });
       if (!voyageRef || !voyageRef.active) throw new Error('INVALID_VOYAGE_REF');
 
-      // Atomically increment counter (using Prisma update — works on PostgreSQL & SQLite)
-      const counter = await tx.bookingCounter.update({
+      // Atomically increment counter (using Prisma upsert — works on PostgreSQL & SQLite)
+      const counter = await tx.bookingCounter.upsert({
         where: { id: 1 },
-        data: { current: { increment: 1 } },
+        update: { current: { increment: 1 } },
+        create: { id: 1, current: 1 },
       });
       const confirmationNumber = `PSBK-${String(counter.current).padStart(6, '0')}`;
 

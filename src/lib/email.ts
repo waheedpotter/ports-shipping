@@ -204,7 +204,7 @@ function buildEmailHtml(
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">ISO</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">POD Agent</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">Email</th>
-                  <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">MUB</th>
+                  <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">MOB No.</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">IMCO</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">UN MO</th>
                   <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;white-space:nowrap;">Temp</th>

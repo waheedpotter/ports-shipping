@@ -946,6 +946,7 @@ function StepReviewAndConfirmed({
                       <div><span className="text-gray-400">CHK: </span><span className="font-medium text-gray-800">{c.chk || '—'}</span></div>
                       <div><span className="text-gray-400">POD Agent: </span><span className="font-medium text-gray-800">{c.podAgentName || '—'}</span></div>
                       <div><span className="text-gray-400">Agent Email: </span><span className="font-medium text-gray-800">{c.email || '—'}</span></div>
+                      <div><span className="text-gray-400">MOB No.: </span><span className="font-medium text-gray-800">{c.mub || '—'}</span></div>
                       <div><span className="text-gray-400">IMCO: </span><span className="font-medium text-gray-800">{c.imco || '—'}</span></div>
                       <div><span className="text-gray-400">VGM WT: </span><span className="font-medium text-gray-800">{c.vgmWeight ? `${c.vgmWeight} ${c.uom}` : '—'}</span></div>
                     </div>
