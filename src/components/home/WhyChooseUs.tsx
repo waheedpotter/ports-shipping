@@ -7,8 +7,8 @@ import Link from 'next/link';
 
 export default function WhyChooseUs() {
   const reasons = [
-    "IATA Certified & GCAA Approved DG Agent",
-    "350+ Global Agent Network across 145 Countries",
+    "ISO 9001 Certified Quality & Standards",
+    "Extensive Global Network with Local UAE Expertise",
     "24/7 Operations & Real-Time Shipment Tracking",
     "Temperature-Controlled Storage (-20°C to +25°C)",
     "Specialized in Defense, Pharma & Project Cargo",
@@ -50,8 +50,8 @@ export default function WhyChooseUs() {
             className="grid grid-cols-2 gap-6"
           >
             {[
-              { icon: Award, title: "IATA Certified", desc: "Top safety & standards" },
-              { icon: Globe, title: "Global Reach", desc: "145+ Countries covered" },
+              { icon: Award, title: "ISO 9001 Certified", desc: "Top safety & standards" },
+              { icon: Globe, title: "Global Reach", desc: "Worldwide agent network" },
               { icon: Clock, title: "24/7 Support", desc: "Always here for you" },
               { icon: Thermometer, title: "Cold Chain", desc: "-20°C to +25°C storage" }
             ].map((item, idx) => (

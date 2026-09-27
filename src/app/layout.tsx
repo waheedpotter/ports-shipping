@@ -77,7 +77,7 @@ export default function RootLayout({
         },
         geo: { '@type': 'GeoCoordinates', latitude: 25.2427, longitude: 55.3056 },
         areaServed: ['UAE', 'Oman', 'Kuwait', 'India', 'Kenya', 'Somalia', 'Singapore', 'United Kingdom'],
-        hasCredential: ['ISO 9001 Certified', 'GCAA Approved DG Agent', 'IATA Partner'],
+        hasCredential: ['ISO 9001 Certified'],
       },
       {
         '@type': 'LocalBusiness',

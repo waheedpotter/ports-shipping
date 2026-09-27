@@ -5,12 +5,12 @@ import { motion, useInView } from 'framer-motion';
 
 const stats = [
   { value: '12+', label: 'Years of Excellence' },
-  { value: '145+', label: 'Global Destinations' },
-  { value: '350+', label: 'Partner Agents' },
-  { value: '15,000+', label: 'sq. ft Warehouse' },
+  { value: '8', label: 'Country Offices' },
+  { value: '24/7', label: 'Operations & Support' },
+  { value: '100%', label: 'Shipment Visibility' },
 ];
 
-const certifications = ['ISO 9001', 'IATA', 'GCAA', 'Jebel Ali Free Zone', 'EK SkyCargo Partner'];
+const certifications = ['ISO 9001 Certified'];
 
 export default function StatsSection() {
   const ref = useRef(null);

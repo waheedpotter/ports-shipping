@@ -26,16 +26,16 @@ Whether you're shipping full container loads (FCL), less than container loads (L
 
 As a Non-Vessel Operating Common Carrier (NVOCC), Ports Shipping is rated among the top customers of almost all leading shipping lines operating in the region. This reputation has ensured us competitive rates & space with major liners for consolidated shipments on a regular basis.
 
-Our LCL services reach an impressive 145 destinations worldwide. We represent various NVOs globally and operate weekly scheduled arrivals & departures using reputed carriers.`,
+Our LCL services reach major global destinations worldwide. We represent various NVOs globally and operate weekly scheduled arrivals & departures using reputed carriers.`,
     features: [
       'FCL (Full Container Load) — dedicated container for large shipments',
       'LCL (Less than Container Load) — cost-efficient shared container space',
       'Break Bulk & Project Cargo — oversized and non-containerizable cargo',
       'Ro-Ro Services — roll-on/roll-off for vehicles and machinery',
-      'Cross-stuffing at Jebel Ali Free Zone',
+      'Cross-stuffing at major UAE ports',
       'Door-to-Door Delivery worldwide',
       'Comprehensive Customs Clearance & Documentation',
-      'LCL services to 145+ destinations globally',
+      'LCL services across major global destinations',
       'Weekly scheduled sailings with leading carriers',
       'Competitive NVOCC rates & guaranteed space',
     ],
@@ -44,18 +44,18 @@ Our LCL services reach an impressive 145 destinations worldwide. We represent va
   {
     slug: 'air-freight',
     title: 'Air Freight & Chartering',
-    shortDescription: 'IATA-certified air cargo operations covering Dubai International Airport terminals T3 & FG5, EK SkyCargo, and full charter solutions.',
+    shortDescription: 'Comprehensive air cargo operations covering Dubai International Airport and full charter solutions.',
     icon: 'Plane',
     image: '/images/service-air.jpg',
     category: 'Ocean & Air',
     heroTitle: 'Air Freight Management',
     content: `Ports Shipping's Air Freight Division offers effective Air Cargo services. Our Air Freight team offers complete logistical solutions and is a trusted partner for Air Cargo Management. Our expertise in operations, customs regulations, licenses & consular documentation help achieve optimum results.
 
-We operate as an IATA certified agent with access to Dubai International Airport's EK SkyCargo, T3, FG5 & DWC terminals, ensuring your cargo moves with the world's leading airline operators.
+We operate air cargo services with direct access to Dubai International Airport terminals, ensuring your cargo moves with leading airline operators.
 
-Our bonded warehouse facility in Dubai Cargo Village and Jebel Ali Free Zone provides secure storage for transit and consolidation cargo. As a GCAA and IATA approved DG Agent, we handle Dangerous Goods with full regulatory compliance.`,
+Our bonded warehouse facility in Dubai provides secure storage for transit and consolidation cargo. We handle Dangerous Goods with full regulatory compliance.`,
     features: [
-      'IATA capabilities with Dubai International Airports, EK SkyCargo, T3, FG5 & DWC',
+      'Air Freight capabilities with Dubai International Airports, T3, FG5 & DWC',
       'Air Freight Export/Import Consolidation',
       'Multimodal Operations (Sea/Air, Sea/Land Management)',
       'Project, Perishable & DG Cargo handling',
@@ -64,11 +64,11 @@ Our bonded warehouse facility in Dubai Cargo Village and Jebel Ali Free Zone pro
       'Customs clearance and delivery',
       'Supply Chain and Logistics Management',
       'Cargo General Sales Agent services',
-      'Bonded warehouse in Dubai Cargo Village & Jebel Ali Free Zone',
-      'GCAA and IATA approved DG Agent',
+      'Bonded warehouse in Dubai Cargo Village & UAE ports',
+      'Certified Dangerous Goods (DG) Handling',
       'Online customs clearance and freight booking facility',
     ],
-    keywords: ['air freight Dubai', 'air cargo UAE', 'IATA agent Dubai', 'DG cargo UAE', 'aircraft charter Dubai', 'EK SkyCargo partner'],
+    keywords: ['air freight Dubai', 'air cargo UAE', 'DG cargo UAE', 'aircraft charter Dubai'],
   },
   {
     slug: 'land-transport',
@@ -100,17 +100,17 @@ Our network spans UAE, Saudi Arabia (KSA), Kuwait, Bahrain, Oman, Jordan, Egypt,
   {
     slug: 'customs-clearance',
     title: 'Customs Clearance & Port Handling',
-    shortDescription: 'Full-service customs clearance at Port Rashid, Jebel Ali Free Zone, and Dubai International Airport with expert documentation handling.',
+    shortDescription: 'Full-service customs clearance at Port Rashid, UAE ports, and Dubai International Airport with expert documentation handling.',
     icon: 'FileCheck',
     category: 'Land & Customs',
     heroTitle: 'Customs Clearance & Port Handling',
-    content: `Ports Shipping provides comprehensive customs clearance services across all major UAE entry points — Port Rashid, Jebel Ali Free Zone, and Dubai International Airport terminals.
+    content: `Ports Shipping provides comprehensive customs clearance services across all major UAE entry points — Port Rashid, seaport terminals, and Dubai International Airport terminals.
 
 Our experienced team handles all aspects of customs documentation, consular legalization, and transit clearances, ensuring your cargo moves through customs efficiently and in full regulatory compliance.
 
 We maintain strong working relationships with UAE Customs, Dubai Municipality, and all relevant government authorities, giving your shipments priority processing and minimal delays.`,
     features: [
-      'Customs clearance at Port Rashid, Jebel Ali Free Zone & Dubai Airport',
+      'Customs clearance at Port Rashid, UAE ports & Dubai Airport',
       'Comprehensive customs documentation preparation',
       'Consular legalization and attestation services',
       'Transit clearances for re-export cargo',
@@ -121,12 +121,12 @@ We maintain strong working relationships with UAE Customs, Dubai Municipality, a
       'FIRS, Dubai Municipality & laboratory coordination',
       'Swift resolution of customs holds and queries',
     ],
-    keywords: ['customs clearance Dubai', 'Jebel Ali customs agent', 'import clearance UAE', 'export clearance Dubai', 'customs broker UAE'],
+    keywords: ['customs clearance Dubai', 'UAE customs agent', 'import clearance UAE', 'export clearance Dubai', 'customs broker UAE'],
   },
   {
     slug: 'warehousing',
     title: 'Contract Warehousing & Temperature-Controlled Storage',
-    shortDescription: 'Over 15,000 sq. ft of ambient, chilled and frozen storage in Dubai with 24/7 HSE monitoring, high-density racking and comprehensive VAS.',
+    shortDescription: 'Modern ambient, chilled and frozen storage in Dubai with 24/7 HSE monitoring, high-density racking and comprehensive VAS.',
     icon: 'Warehouse',
     category: 'Warehousing',
     heroTitle: 'Logistics, Warehousing & Contract Logistics',
@@ -134,13 +134,13 @@ We maintain strong working relationships with UAE Customs, Dubai Municipality, a
 
 Ever attentive to customers' needs and current economic forces, Ports Shipping provides innovative integrated solutions designed to help drive value, via a comprehensive range of warehousing and distribution solutions which combine advanced technologies and value-added services.
 
-With facilities comprising over 15,000 sq. m of ambient and temperature-controlled storage, Ports Shipping caters to the requirements of large and small businesses alike. Our facilities serve sectors as diverse as automotive spare parts, retail, fashion, watches, consumer electronics, hardware, machinery, home furnishings, and humanitarian aid.
+With modern ambient and temperature-controlled storage facilities, Ports Shipping caters to the requirements of large and small businesses alike. Our facilities serve sectors as diverse as automotive spare parts, retail, fashion, watches, consumer electronics, hardware, machinery, home furnishings, and humanitarian aid.
 
 We offer three different temperature zones for your cold chains: Ambient (15°C to 25°C), Chilled (2°C to 8°C), and Frozen (-20°C and below).`,
     features: [
-      '15,000+ sq. ft. dedicated & shared facilities in Dubai',
+      'Dedicated & shared modern storage facilities in Dubai',
       'High-density racking, CCTV & 24/7 HSE monitoring',
-      'Bonded CFS storage at Jebel Ali',
+      'Bonded CFS storage at UAE ports',
       'Ambient (15°C–25°C), Chilled (2°C–8°C) & Frozen (-20°C) storage zones',
       'Pick & pack, barcoding, labeling & repalletization',
       'Web-enabled inventory visibility with real-time access',
@@ -231,7 +231,7 @@ Our team is equipped to manage the special documentation, diplomatic-clearance c
       'Real-time coordination and tracking for urgent operations',
       'Special diplomatic-clearance channels and documentation',
       'Defense, military and armoured cargo logistics',
-      '350+ global agents including UN mission zones and conflict areas',
+      'Global network of agents including UN mission zones and conflict areas',
       'Swift action and mobilization when time is critical',
       'Rigorous compliance with applicable laws and diplomatic protocols',
     ],
@@ -318,7 +318,7 @@ Health, Safety and Environment (HSE) is paramount across all CFS operations, wit
   {
     slug: 'household-moving',
     title: 'Household & Personal Effects Relocation',
-    shortDescription: 'White-glove household moving and personal effects shipping with specialized packers, 350 global agents and dedicated project coordinators.',
+    shortDescription: 'White-glove household moving and personal effects shipping with specialized packers, extensive global agent network and dedicated project coordinators.',
     icon: 'Home',
     category: 'Specialized',
     heroTitle: 'Household & Personal Effects Moving & Relocations',
@@ -326,12 +326,12 @@ Health, Safety and Environment (HSE) is paramount across all CFS operations, wit
 
 Our movers and packers and handyman experts have years of on-field experience and extensive knowledge and understanding of the business, which ensures high-quality moving, shifting and relocating services to corporates, families and individuals.
 
-We nominate a specialized project coordinator for every enquiry because we believe each of our moves is special and unique. With around 350 agents across 145 countries — including countries which have civil conflicts, United Nations missions and movements of diplomatic counsellors — we can move you anywhere in the world.`,
+We nominate a specialized project coordinator for every enquiry because we believe each of our moves is special and unique. With an extensive global network of partner agents worldwide — including countries which have civil conflicts, United Nations missions and movements of diplomatic counsellors — we can move you anywhere in the world.`,
     features: [
       'Customized packing and worry-free moving solutions',
       'Experienced movers & packers and handyman experts',
       'Dedicated project coordinator for every move',
-      '350+ agents across 145 countries worldwide',
+      'Extensive partner agent network worldwide',
       'Coverage including UN mission zones and conflict areas',
       'Diplomatic counsellor relocation expertise',
       'Sea freight, air freight and road transport options',
@@ -398,7 +398,7 @@ Multimodal modes of transport basically combine the flexibility of trucks with e
   {
     slug: 'nvocc',
     title: 'Main Liner & NVOCC Services',
-    shortDescription: 'Top-rated NVOCC with LCL services to 145 destinations, weekly sailings on major trade lanes, and competitive consolidation rates.',
+    shortDescription: 'Top-rated NVOCC with LCL services across major global destinations, weekly sailings on primary trade lanes, and competitive consolidation rates.',
     icon: 'Waves',
     category: 'Ocean & Air',
     heroTitle: 'Main Liner & NVOCC (Non-Vessel Operating Common Carrier)',
@@ -408,7 +408,7 @@ We provide seamless ocean freight solutions under both Liner and NVOCC models. O
 
 As your NVOCC, we act as your carrier or principal — securing bulk space with major liner operators, issuing our own house Bill of Lading, and consolidating cargo where required to offer competitive rates and flexible routing.`,
     features: [
-      'LCL services to 145+ global destinations',
+      'LCL services across major global trade lanes and destinations',
       'Representation of various NVOs globally',
       'Weekly scheduled arrivals & departures using reputed carriers',
       'Dedicated sales and customer service team',

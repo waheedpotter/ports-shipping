@@ -23,9 +23,7 @@ export default function Footer() {
               Leading the way in global logistics and supply chain solutions since 2012. Your trusted partner for seamless cargo movement worldwide.
             </p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-2 py-1 text-xs font-semibold bg-gray-800 border border-gray-700 rounded text-gold-500">ISO 9001</span>
-              <span className="px-2 py-1 text-xs font-semibold bg-gray-800 border border-gray-700 rounded text-gold-500">GCAA Approved DG</span>
-              <span className="px-2 py-1 text-xs font-semibold bg-gray-800 border border-gray-700 rounded text-gold-500">IATA Partner</span>
+              <span className="px-2 py-1 text-xs font-semibold bg-gray-800 border border-gray-700 rounded text-gold-500">ISO 9001 Certified</span>
             </div>
             <div className="flex space-x-4 pt-2">
               <a href="#" className="text-gray-400 hover:text-gold-500 transition-colors"><Linkedin className="w-5 h-5" /></a>

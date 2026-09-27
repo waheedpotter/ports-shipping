@@ -85,22 +85,18 @@ export default function Hero({ onQuoteClick, onTrackClick }: HeroProps) {
             </button>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-white/20">
+          <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-8 pt-8 border-t border-white/20">
             <div>
               <div className="text-3xl font-bold text-[#C9A84C]">12+</div>
-              <div className="text-sm text-gray-300">Years</div>
+              <div className="text-sm text-gray-300">Years Experience</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-[#C9A84C]">145+</div>
-              <div className="text-sm text-gray-300">Destinations</div>
+              <div className="text-3xl font-bold text-[#C9A84C]">8</div>
+              <div className="text-sm text-gray-300">Country Offices</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-[#C9A84C]">350+</div>
-              <div className="text-sm text-gray-300">Global Agents</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-[#C9A84C]">15k+</div>
-              <div className="text-sm text-gray-300">sqft Warehouse</div>
+              <div className="text-3xl font-bold text-[#C9A84C]">24/7</div>
+              <div className="text-sm text-gray-300">Cargo Support</div>
             </div>
           </motion.div>
         </motion.div>

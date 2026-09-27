@@ -73,7 +73,7 @@ export default function ServicesGrid() {
                       </div>
                       <div className="flex items-center gap-1.5 text-gray-800">
                         <CheckCircle2 size={15} className="text-[#8B0000] flex-shrink-0" />
-                        <span>145+ Global Ports</span>
+                        <span>Global Port Network</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-gray-800">
                         <CheckCircle2 size={15} className="text-[#8B0000] flex-shrink-0" />
@@ -81,7 +81,7 @@ export default function ServicesGrid() {
                       </div>
                       <div className="flex items-center gap-1.5 text-gray-800">
                         <CheckCircle2 size={15} className="text-[#8B0000] flex-shrink-0" />
-                        <span>Jebel Ali Free Zone</span>
+                        <span>Port Customs Clearance</span>
                       </div>
                     </div>
                     <div className="text-[#8B0000] group-hover:text-[#C9A84C] font-bold flex items-center justify-between transition-colors pt-2">
@@ -117,7 +117,7 @@ export default function ServicesGrid() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute top-4 left-4 bg-gray-900 text-white px-3 py-1 rounded-full text-xs font-bold tracking-wide flex items-center gap-1.5 shadow-md border border-[#C9A84C]/50">
                       <Plane size={14} className="text-[#C9A84C]" />
-                      <span>IATA CERTIFIED</span>
+                      <span>AIR CARGO & CHARTER</span>
                     </div>
                     <div className="absolute bottom-4 left-4 right-4 text-white">
                       <span className="text-[#C9A84C] font-semibold text-xs tracking-wider uppercase">Aviation & Rapid Cargo</span>
@@ -137,11 +137,11 @@ export default function ServicesGrid() {
                       </div>
                       <div className="flex items-center gap-1.5 text-gray-800">
                         <CheckCircle2 size={15} className="text-[#8B0000] flex-shrink-0" />
-                        <span>EK SkyCargo Partner</span>
+                        <span>Global Air Network</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-gray-800">
                         <CheckCircle2 size={15} className="text-[#8B0000] flex-shrink-0" />
-                        <span>GCAA Approved DG Agent</span>
+                        <span>Dangerous Goods Handling</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-gray-800">
                         <CheckCircle2 size={15} className="text-[#8B0000] flex-shrink-0" />

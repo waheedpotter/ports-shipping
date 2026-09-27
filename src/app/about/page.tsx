@@ -86,10 +86,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-10">Certified & Trusted</h2>
           <div className="flex flex-wrap justify-center gap-12 items-center text-xl font-bold text-gray-400">
-            <span className="hover:text-[#8B0000] transition-colors">ISO 9001</span>
-            <span className="hover:text-[#8B0000] transition-colors">GCAA Approved</span>
-            <span className="hover:text-[#8B0000] transition-colors">IATA Certified</span>
-            <span className="hover:text-[#8B0000] transition-colors">Jebel Ali Partner</span>
+            <span className="hover:text-[#8B0000] transition-colors">ISO 9001 Certified</span>
           </div>
         </div>
       </section>
