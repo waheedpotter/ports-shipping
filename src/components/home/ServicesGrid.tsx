@@ -174,15 +174,36 @@ export default function ServicesGrid() {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
                 <Link href={`/services/${service.slug}`} className="block group h-full">
-                  <div className="bg-white p-8 rounded-xl border-t-4 border-[#8B0000] shadow-sm hover:shadow-xl transition-all duration-300 hover:bg-[#8B0000] hover:-translate-y-1 h-full flex flex-col justify-between">
-                    <div>
-                      <Icon className="w-12 h-12 text-[#8B0000] group-hover:text-[#C9A84C] mb-6 transition-colors" />
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-white mb-3 transition-colors">{service.title}</h3>
-                      <p className="text-gray-600 group-hover:text-gray-200 mb-6 transition-colors line-clamp-3">{service.shortDescription}</p>
+                  <div className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#8B0000] transition-all duration-300 h-full flex flex-col justify-between">
+                    {service.image ? (
+                      <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                        <div className="absolute top-3 left-3 bg-[#8B0000] text-white px-2.5 py-1 rounded-full text-xs font-bold tracking-wide flex items-center gap-1.5 shadow">
+                          <Icon size={13} className="text-[#C9A84C]" />
+                          <span className="uppercase text-[11px]">{service.category}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-6 pb-0">
+                        <Icon className="w-10 h-10 text-[#8B0000] group-hover:text-[#C9A84C] transition-colors" />
+                      </div>
+                    )}
+                    <div className="p-6 flex flex-col flex-grow justify-between">
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#8B0000] mb-2 transition-colors">{service.title}</h3>
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">{service.shortDescription}</p>
+                      </div>
+                      <span className="text-[#8B0000] group-hover:text-[#C9A84C] font-semibold text-sm flex items-center transition-colors pt-3 border-t border-gray-100">
+                        Learn More <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                      </span>
                     </div>
-                    <span className="text-[#8B0000] group-hover:text-[#C9A84C] font-semibold flex items-center transition-colors pt-4 border-t border-gray-100 group-hover:border-white/20">
-                      Learn More <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
-                    </span>
                   </div>
                 </Link>
               </motion.div>

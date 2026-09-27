@@ -75,6 +75,7 @@ Our bonded warehouse facility in Dubai provides secure storage for transit and c
     title: 'GCC Land Transport & Overland Trucking',
     shortDescription: 'Cross-border FTL & LTL fleets servicing UAE, KSA, Kuwait, Bahrain, Oman, Jordan, Egypt and Yemen with GPS-monitored vehicles.',
     icon: 'Truck',
+    image: '/images/service-land.jpg',
     category: 'Land & Customs',
     heroTitle: 'Land Transportation Management',
     content: `Ports Shipping has one of the best and most comprehensive networks across all GCC countries, including offices and agents across all the borders to facilitate smooth clearances of the trucks. We are specialized in carrying Project, OOG, Diplomatic, Humanitarian Aid, General and Break Bulk cargo.
@@ -102,6 +103,7 @@ Our network spans UAE, Saudi Arabia (KSA), Kuwait, Bahrain, Oman, Jordan, Egypt,
     title: 'Customs Clearance & Port Handling',
     shortDescription: 'Full-service customs clearance at Port Rashid, UAE ports, and Dubai International Airport with expert documentation handling.',
     icon: 'FileCheck',
+    image: '/images/service-customs.jpg',
     category: 'Land & Customs',
     heroTitle: 'Customs Clearance & Port Handling',
     content: `Ports Shipping provides comprehensive customs clearance services across all major UAE entry points — Port Rashid, seaport terminals, and Dubai International Airport terminals.
@@ -128,6 +130,7 @@ We maintain strong working relationships with UAE Customs, Dubai Municipality, a
     title: 'Contract Warehousing & Temperature-Controlled Storage',
     shortDescription: 'Modern ambient, chilled and frozen storage in Dubai with 24/7 HSE monitoring, high-density racking and comprehensive VAS.',
     icon: 'Warehouse',
+    image: '/images/service-warehousing.jpg',
     category: 'Warehousing',
     heroTitle: 'Logistics, Warehousing & Contract Logistics',
     content: `Ports Shipping's Logistics team of experienced professionals consults with each customer to agree the best dedicated or shared warehousing solution, customized according to the scale of the individual business requirement, location and operational model.
@@ -294,6 +297,7 @@ Handling aircraft and helicopters requires rigorous planning, truss-packaging, w
     title: 'Container Freight Station (CFS)',
     shortDescription: 'State-of-the-art fully-racked CFS facilities in Jebel Ali, Oman and Kuwait with HSE monitoring, CCTV and custom-built dock levellers.',
     icon: 'Container',
+    image: '/images/service-cfs.jpg',
     category: 'Warehousing',
     heroTitle: 'Container Freight Station (CFS) Operations',
     content: `The Ports Shipping Container Freight Station has become a landmark success, located in Jebel Ali, Oman & Kuwait. Our CFS facility represents a strategic investment in world-class cargo handling infrastructure.
