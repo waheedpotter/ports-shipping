@@ -5,7 +5,6 @@ import Hero from '@/components/home/Hero';
 import StatsSection from '@/components/home/StatsSection';
 import ServicesGrid from '@/components/home/ServicesGrid';
 import WhyChooseUs from '@/components/home/WhyChooseUs';
-import Testimonials from '@/components/home/Testimonials';
 import TrackSection from '@/components/home/TrackSection';
 import ServicesCTA from '@/components/home/ServicesCTA';
 
@@ -31,7 +30,6 @@ export default function Home() {
       <ServicesGrid />
       <WhyChooseUs />
       <TrackSection />
-      <Testimonials />
       <ServicesCTA />
       
       {/* JSON-LD Schema for LocalBusiness */}

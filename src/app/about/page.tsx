@@ -49,14 +49,14 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-            <div className="relative h-[480px] w-full rounded-2xl overflow-hidden shadow-2xl border border-gray-100">
+            <div className="relative w-full aspect-[824/1024] max-h-[580px] rounded-2xl overflow-hidden shadow-2xl border border-gray-100">
               <Image
                 src="/images/about-flagship.jpg"
                 alt="Ports Shipping LLC - Flagship Marine & Overland Operations"
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-contain bg-neutral-900"
+                className="object-cover object-center"
               />
             </div>
           </div>
