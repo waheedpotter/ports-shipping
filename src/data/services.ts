@@ -378,6 +378,7 @@ Our trusted, personalised and proven service will deliver on time every time.`,
     title: 'Multi-Modal Operations',
     shortDescription: 'Integrated transport chains combining sea, air, road and rail to optimize lead time, reduce costs and maximize supply chain efficiency.',
     icon: 'GitMerge',
+    image: '/images/service-multimodal.jpg',
     category: 'Land & Customs',
     heroTitle: 'Multi-Modal Transportation Solutions',
     content: `Multimodal transportation is essentially an international through-transport combination with various modes of transport. This results in an integrated transport chain where the strength of each alternative is utilized.
@@ -404,6 +405,7 @@ Multimodal modes of transport basically combine the flexibility of trucks with e
     title: 'Main Liner & NVOCC Services',
     shortDescription: 'Top-rated NVOCC with LCL services across major global destinations, weekly sailings on primary trade lanes, and competitive consolidation rates.',
     icon: 'Waves',
+    image: '/images/service-nvocc.jpg',
     category: 'Ocean & Air',
     heroTitle: 'Main Liner & NVOCC (Non-Vessel Operating Common Carrier)',
     content: `As a Non-Vessel Operating Common Carrier, Ports Shipping is rated among the top customers of almost all leading shipping lines operating in the region. This reputation has ensured us competitive rates & space with major liners for consolidated shipments on a regular basis.

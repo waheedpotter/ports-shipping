@@ -21,11 +21,45 @@ export default function AboutPage() {
 
       {/* Story */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Our Story</h2>
-          <p className="text-lg text-gray-700 leading-relaxed">
-            Incorporated in 2012 in Dubai, UAE, Ports Shipping provides the complete gamut of forwarding and logistics solutions from/to anywhere in the world. We offer comprehensive solutions from simple Air and Sea freight forwarding up to full end-to-end multi-modal 3PL and 4PL solutions.
-          </p>
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="text-xs font-bold text-[#8B0000] uppercase tracking-wider">Established in Dubai</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2 mb-6">Our Story &amp; Legacy</h2>
+              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                Incorporated in 2012 in Dubai, UAE, Ports Shipping provides the complete gamut of forwarding and logistics solutions from and to anywhere in the world. We offer comprehensive solutions from simple Air and Sea freight forwarding up to full end-to-end multi-modal 3PL and 4PL solutions.
+              </p>
+              <p className="text-gray-600 leading-relaxed mb-8">
+                Operating from our strategic headquarters in Dubai, we bridge global trade corridors with dedicated sea freight, air freight chartering, overland trucking across the GCC, customs clearance, and container freight station operations.
+              </p>
+              <div className="flex items-center gap-6 pt-4 border-t border-gray-100">
+                <div>
+                  <div className="text-3xl font-bold text-[#C9A84C]">2012</div>
+                  <div className="text-xs text-gray-500 font-semibold uppercase mt-1">Year Founded</div>
+                </div>
+                <div className="h-10 w-[1px] bg-gray-200" />
+                <div>
+                  <div className="text-3xl font-bold text-[#8B0000]">ISO 9001</div>
+                  <div className="text-xs text-gray-500 font-semibold uppercase mt-1">Certified Quality</div>
+                </div>
+                <div className="h-10 w-[1px] bg-gray-200" />
+                <div>
+                  <div className="text-3xl font-bold text-[#C9A84C]">24/7</div>
+                  <div className="text-xs text-gray-500 font-semibold uppercase mt-1">Support</div>
+                </div>
+              </div>
+            </div>
+            <div className="relative h-[480px] w-full rounded-2xl overflow-hidden shadow-2xl border border-gray-100">
+              <Image
+                src="/images/about-flagship.jpg"
+                alt="Ports Shipping LLC - Flagship Marine & Overland Operations"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-contain bg-neutral-900"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
