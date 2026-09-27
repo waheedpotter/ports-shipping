@@ -5,7 +5,7 @@ import { motion, useInView } from 'framer-motion';
 
 const stats = [
   { value: '12+', label: 'Years of Excellence' },
-  { value: '8', label: 'Country Offices' },
+  { value: 'Global', label: 'Trade Network' },
   { value: '24/7', label: 'Operations & Support' },
   { value: '100%', label: 'Shipment Visibility' },
 ];

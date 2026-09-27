@@ -4,6 +4,7 @@ import './globals.css';
 import TopBar from '@/components/layout/TopBar';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import WhatsAppButton from '@/components/ui/WhatsAppButton';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' });
@@ -76,7 +77,7 @@ export default function RootLayout({
           addressCountry: 'AE',
         },
         geo: { '@type': 'GeoCoordinates', latitude: 25.2427, longitude: 55.3056 },
-        areaServed: ['UAE', 'Oman', 'Kuwait', 'India', 'Kenya', 'Somalia', 'Singapore', 'United Kingdom'],
+        areaServed: ['United Arab Emirates', 'GCC', 'Worldwide'],
         hasCredential: ['ISO 9001 Certified'],
       },
       {
@@ -113,6 +114,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <WhatsAppButton />
       </body>
     </html>
   );

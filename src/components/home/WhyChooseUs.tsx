@@ -12,7 +12,7 @@ export default function WhyChooseUs() {
     "24/7 Operations & Real-Time Shipment Tracking",
     "Temperature-Controlled Storage (-20°C to +25°C)",
     "Specialized in Defense, Pharma & Project Cargo",
-    "Offices in 8 Countries: UAE, Oman, Kuwait, India, Kenya, Somalia, Singapore, UK"
+    "Strategic UAE Hub with Worldwide Freight Solutions"
   ];
 
   return (

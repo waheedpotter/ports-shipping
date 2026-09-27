@@ -81,19 +81,9 @@ export default function Footer() {
 
         </div>
 
-        {/* Global Presence */}
+        {/* Global Reach */}
         <div className="mt-12 pt-8 border-t border-gray-800 text-center">
-          <p className="text-sm text-gray-500 mb-4">Our Global Presence</p>
-          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400 font-medium">
-            <span>UAE</span> <span className="text-gray-700">|</span>
-            <span>Oman</span> <span className="text-gray-700">|</span>
-            <span>Kuwait</span> <span className="text-gray-700">|</span>
-            <span>India</span> <span className="text-gray-700">|</span>
-            <span>Kenya</span> <span className="text-gray-700">|</span>
-            <span>Somalia</span> <span className="text-gray-700">|</span>
-            <span>Singapore</span> <span className="text-gray-700">|</span>
-            <span>UK</span>
-          </div>
+          <p className="text-sm text-gray-400 font-medium">Dubai Headquarters &bull; Comprehensive GCC &amp; Global Freight Forwarding</p>
         </div>
       </div>
 

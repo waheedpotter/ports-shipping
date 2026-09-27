@@ -102,8 +102,8 @@ export default function ContactPage() {
             </div>
 
             <div className="pt-8 border-t border-gray-200">
-              <h4 className="font-bold text-gray-900 text-lg mb-4">Global Offices</h4>
-              <p className="text-gray-600 leading-relaxed font-medium">UAE • Oman • Kuwait • India • Kenya • Somalia • Singapore • UK</p>
+              <h4 className="font-bold text-gray-900 text-lg mb-2">Headquarters & Global Reach</h4>
+              <p className="text-gray-600 leading-relaxed font-medium">Based in Dubai, UAE, serving clients across the GCC and worldwide through our established global network.</p>
             </div>
           </div>
         </div>

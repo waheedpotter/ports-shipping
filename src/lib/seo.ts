@@ -50,6 +50,6 @@ export function generateJsonLd() {
       latitude: "25.2425",
       longitude: "55.3152"
     },
-    areaServed: ["UAE", "Oman", "Kuwait", "India", "Kenya", "Somalia", "Singapore", "United Kingdom"]
+    areaServed: ["United Arab Emirates", "GCC", "Worldwide"]
   };
 }

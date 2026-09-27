@@ -4,7 +4,7 @@ import { Target, Lightbulb, ShieldCheck, MapPin } from 'lucide-react';
 
 export const metadata = {
   title: 'About Ports Shipping LLC | Award-Winning Logistics in Dubai',
-  description: 'Learn about Ports Shipping LLC. End-to-end logistics and freight forwarding since 2012. Offices in UAE, Oman, Kuwait, India, Kenya, Somalia, Singapore, and UK.',
+  description: 'Learn about Ports Shipping LLC. End-to-end logistics and freight forwarding since 2012 from Dubai to global destinations.',
 };
 
 export default function AboutPage() {
@@ -24,7 +24,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Our Story</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
-            Incorporated in 2012 and having offices in UAE, OMAN, KUWAIT, INDIA, KENYA, SOMALIA, SINGAPORE and the UNITED KINGDOM. We provide the complete gamut of forwarding and logistics solutions from/to anywhere in the world. We offer comprehensive solutions from simple Air and Sea freight forwarding up to full end-to-end multi-modal 3PL and 4PL solutions.
+            Incorporated in 2012 in Dubai, UAE, Ports Shipping provides the complete gamut of forwarding and logistics solutions from/to anywhere in the world. We offer comprehensive solutions from simple Air and Sea freight forwarding up to full end-to-end multi-modal 3PL and 4PL solutions.
           </p>
         </div>
       </section>
@@ -64,17 +64,26 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Global Presence */}
+      {/* Global Reach */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-12">Global Presence</h2>
+          <h2 className="text-3xl font-bold mb-4">Global Reach & Local Expertise</h2>
+          <p className="text-gray-300 max-w-2xl mx-auto mb-12">
+            Headquartered in Dubai, UAE, our logistics operations connect major commercial hubs and trade corridors worldwide through dedicated partnerships and comprehensive multi-modal infrastructure.
+          </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {["UAE (HQ)", "Oman", "Kuwait", "India", "Kenya", "Somalia", "Singapore", "United Kingdom"].map((country, idx) => (
+            {[
+              { title: "Dubai HQ", subtitle: "Strategic UAE Hub" },
+              { title: "GCC Network", subtitle: "Overland Trucking" },
+              { title: "Ocean Freight", subtitle: "Global Liners & NVOCC" },
+              { title: "Air Freight", subtitle: "Worldwide Connections" },
+            ].map((item, idx) => (
               <div key={idx} className="flex flex-col items-center">
                 <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
                   <MapPin className="w-8 h-8 text-[#C9A84C]" />
                 </div>
-                <span className="font-bold text-lg">{country}</span>
+                <span className="font-bold text-lg mb-1">{item.title}</span>
+                <span className="text-sm text-gray-400">{item.subtitle}</span>
               </div>
             ))}
           </div>

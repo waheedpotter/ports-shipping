@@ -91,8 +91,8 @@ export default function Hero({ onQuoteClick, onTrackClick }: HeroProps) {
               <div className="text-sm text-gray-300">Years Experience</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-[#C9A84C]">8</div>
-              <div className="text-sm text-gray-300">Country Offices</div>
+              <div className="text-3xl font-bold text-[#C9A84C]">100%</div>
+              <div className="text-sm text-gray-300">Shipment Visibility</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-[#C9A84C]">24/7</div>
