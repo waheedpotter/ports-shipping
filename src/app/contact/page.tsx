@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, ExternalLink } from 'lucide-react';
 
 export default function ContactPage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -77,6 +77,15 @@ export default function ContactPage() {
               <div>
                 <h4 className="font-bold text-gray-900 text-lg">Dubai Headquarters</h4>
                 <p className="text-gray-600 mt-1">Office 204-1, Zabeel Business Centre (Smark 9),<br/>Umm Hurair Road Behind GPO, PO Box 47081<br/>Al Karama, Dubai, UAE</p>
+                <a
+                  href="https://maps.app.goo.gl/igcxDqehLmwbPnPM9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8B0000] hover:text-[#C9A84C] mt-2 transition-colors"
+                >
+                  <span>Open in Google Maps</span>
+                  <ExternalLink size={12} />
+                </a>
               </div>
             </div>
             <div className="flex gap-4">
@@ -104,6 +113,46 @@ export default function ContactPage() {
             <div className="pt-8 border-t border-gray-200">
               <h4 className="font-bold text-gray-900 text-lg mb-2">Headquarters & Global Reach</h4>
               <p className="text-gray-600 leading-relaxed font-medium">Based in Dubai, UAE, serving clients across the GCC and worldwide through our established global network.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Google Map Section */}
+      <section className="pb-24">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="p-6 md:p-8 bg-gray-50 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <span className="text-xs font-bold text-[#8B0000] uppercase tracking-wider">Office Location</span>
+                <h3 className="text-2xl font-bold text-gray-900 mt-1">Visit Ports Shipping LLC</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Office 204-1, Zabeel Business Centre (Smark 9), Umm Hurair Road Behind GPO, Al Karama, Dubai, UAE
+                </p>
+              </div>
+              <a
+                href="https://maps.app.goo.gl/igcxDqehLmwbPnPM9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#8B0000] text-white font-semibold rounded-lg hover:bg-[#6b0000] transition-colors shadow-md text-sm shrink-0"
+              >
+                <MapPin className="w-4 h-4 text-[#C9A84C]" />
+                <span>Get Directions on Google Maps</span>
+                <ExternalLink size={14} />
+              </a>
+            </div>
+            <div className="relative w-full h-[450px]">
+              <iframe
+                title="Ports Shipping LLC Location Map"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.6293911571497!2d55.30711367538356!3d25.243764377682025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43509d7b0e57%3A0xac6384391589318b!2sPorts%20Shipping%20LLC!5e0!3m2!1sen!2sae!4v1711234567890!5m2!1sen!2sae"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+              />
             </div>
           </div>
         </div>
