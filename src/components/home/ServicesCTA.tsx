@@ -11,7 +11,7 @@ export default function ServicesCTA() {
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link href="/contact" className="px-8 py-4 bg-[#C9A84C] text-white font-bold rounded-md hover:bg-[#b39543] transition-colors shadow-lg shadow-[#C9A84C]/20">
-            Get Free Quote
+            Get Quote
           </Link>
           <a href="tel:+97143447867" className="px-8 py-4 bg-white/10 border border-white/20 text-white font-bold rounded-md hover:bg-white/20 transition-colors backdrop-blur-sm">
             Call Us Now: +971 4 344 7867

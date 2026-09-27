@@ -26,7 +26,7 @@ export default function ServicesGrid() {
           </span>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Comprehensive Logistics Solutions</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            From Dubai to the rest of the world, we provide end-to-end freight forwarding, NVOCC operations, and specialized logistics tailored to your exact cargo requirements.
+            From Dubai to the rest of the world, we provide end-to-end freight forwarding, Flagship Feeder Operator / Container Liner, and specialized logistics tailored to your exact cargo requirements.
           </p>
         </div>
 
@@ -187,7 +187,9 @@ export default function ServicesGrid() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
                         <div className="absolute top-3 left-3 bg-[#8B0000] text-white px-2.5 py-1 rounded-full text-xs font-bold tracking-wide flex items-center gap-1.5 shadow">
                           <Icon size={13} className="text-[#C9A84C]" />
-                          <span className="uppercase text-[11px]">{service.category}</span>
+                          <span className="uppercase text-[11px]">
+                            {service.slug === 'land-transport' ? 'Global Land Transporter' : service.category}
+                          </span>
                         </div>
                       </div>
                     ) : (

@@ -1,6 +1,7 @@
 'use client';
 
-import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram, Twitter } from 'lucide-react';
+import Link from 'next/link';
+import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram, Twitter, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function TopBar() {
@@ -25,7 +26,15 @@ export default function TopBar() {
           Dubai, UAE (Al Karama / Umm Hurair 1)
         </div>
       </div>
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-4">
+        <Link
+          href="/admin"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-black/40 hover:bg-[#8B0000] border border-gold-500/50 text-gold-400 hover:text-white font-medium transition-all"
+        >
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>Admin</span>
+        </Link>
+        <div className="h-3 w-px bg-white/20" />
         <div className="font-semibold text-gold-500 tracking-wider">
           ISO 9001 CERTIFIED
         </div>

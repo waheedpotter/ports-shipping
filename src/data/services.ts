@@ -3,7 +3,7 @@ export interface ServicePage {
   title: string;
   shortDescription: string;
   icon: string;
-  category: 'Ocean & Air' | 'Land & Customs' | 'Warehousing' | 'Specialized';
+  category: 'Ocean & Air' | 'Land & Customs' | 'Warehousing' | 'Specialized' | 'Global Land Transporter';
   heroTitle: string;
   content: string;
   features: string[];
@@ -76,7 +76,7 @@ Our bonded warehouse facility in Dubai provides secure storage for transit and c
     shortDescription: 'Cross-border FTL & LTL fleets servicing UAE, KSA, Kuwait, Bahrain, Oman, Jordan, Egypt and Yemen with GPS-monitored vehicles.',
     icon: 'Truck',
     image: '/images/service-land.jpg',
-    category: 'Land & Customs',
+    category: 'Global Land Transporter',
     heroTitle: 'Land Transportation Management',
     content: `Ports Shipping has one of the best and most comprehensive networks across all GCC countries, including offices and agents across all the borders to facilitate smooth clearances of the trucks. We are specialized in carrying Project, OOG, Diplomatic, Humanitarian Aid, General and Break Bulk cargo.
 

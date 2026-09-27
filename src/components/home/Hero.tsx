@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -11,9 +11,32 @@ interface HeroProps {
   onTrackClick: () => void;
 }
 
+const HERO_SLIDES = [
+  {
+    badge: 'Award-Winning UAE Logistics Since 2012',
+    title: 'Your Global Freight',
+    highlight: 'Partner',
+    description: 'End-to-End Freight Forwarding & Logistics from Dubai to the World. Ocean, Air, Land & Specialized Cargo.',
+  },
+  {
+    badge: 'Regional Feeder & Container Line Services',
+    title: 'Your Regional Feeder &',
+    highlight: 'Global Container Line',
+    description: 'Reliable Feeder Network & Liner Services Connecting the Middle East, Indian Subcontinent, Africa & Beyond.',
+  },
+];
+
 export default function Hero({ onQuoteClick, onTrackClick }: HeroProps) {
   const router = useRouter();
   const [trackQuery, setTrackQuery] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleTrackSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +57,8 @@ export default function Hero({ onQuoteClick, onTrackClick }: HeroProps) {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
+
+  const slide = HERO_SLIDES[currentSlide];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-950">
@@ -60,22 +85,52 @@ export default function Hero({ onQuoteClick, onTrackClick }: HeroProps) {
           animate="visible"
           className="text-white pt-24 pb-12 lg:py-24"
         >
-          <motion.div variants={itemVariants} className="inline-block px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full text-sm font-medium mb-6 border border-white/10">
-            Award-Winning UAE Logistics Since 2012
-          </motion.div>
-          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold leading-tight mb-6">
-            Your Global Freight <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#e6d08c]">Partner</span>
-          </motion.h1>
-          <motion.p variants={itemVariants} className="text-lg text-gray-200 mb-8 max-w-xl">
-            End-to-End Freight Forwarding & Logistics from Dubai to the World. Ocean, Air, Land & Specialized Cargo.
-          </motion.p>
+          {/* Animated Slide Content with AnimatePresence */}
+          <div className="min-h-[220px] sm:min-h-[240px] md:min-h-[260px] flex flex-col justify-start">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+              >
+                <div className="inline-block px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full text-sm font-medium mb-6 border border-white/10">
+                  {slide.badge}
+                </div>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+                  {slide.title}{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C9A84C] to-[#e6d08c]">
+                    {slide.highlight}
+                  </span>
+                </h1>
+                <p className="text-base sm:text-lg text-gray-200 mb-6 max-w-xl leading-relaxed">
+                  {slide.description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Slide Indicator Dots */}
+          <div className="flex items-center gap-2 mb-8">
+            {HERO_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  currentSlide === idx ? 'w-8 bg-[#C9A84C]' : 'w-2.5 bg-white/40 hover:bg-white/70'
+                }`}
+              />
+            ))}
+          </div>
           
           <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-12">
             <button 
               onClick={onQuoteClick}
               className="px-8 py-4 bg-gradient-to-r from-[#C9A84C] to-[#b39543] text-white font-bold rounded-md hover:shadow-lg hover:shadow-[#C9A84C]/20 transition-all"
             >
-              Get a Free Quote
+              Get Quote
             </button>
             <button 
               onClick={onTrackClick}
