@@ -41,11 +41,11 @@ interface VoyageRefData {
 // ────────────────────────────────────────────────────────────────────────────
 
 function createTransporter() {
-  const host = process.env.SMTP_HOST;
+  const host = process.env.SMTP_HOST || 'smtp.office365.com';
   const port = parseInt(process.env.SMTP_PORT || '587', 10);
-  const secure = process.env.SMTP_SECURE === 'true';
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const secure = process.env.SMTP_SECURE === 'true'; // false for port 587 (STARTTLS)
+  const user = process.env.SMTP_USER || 'bkg@ports-shipping.com';
+  const pass = process.env.SMTP_PASS || 'P0rt$5953063';
 
   if (!host || !user || !pass) {
     return null;
@@ -56,6 +56,10 @@ function createTransporter() {
     port,
     secure,
     auth: { user, pass },
+    tls: {
+      ciphers: 'SSLv3',
+      rejectUnauthorized: false,
+    },
   });
 }
 
@@ -216,7 +220,7 @@ function buildEmailHtml(
               <!-- Footer Note -->
               <p style="margin:24px 0 0 0;color:#888;font-size:12px;line-height:1.6;">
                 This is an automated confirmation email. Please retain this email for your records.<br/>
-                For any queries, contact our operations team at <a href="mailto:${process.env.FROM_EMAIL ?? 'ops@portsshipping.com'}" style="color:#8B0000;">${process.env.FROM_EMAIL ?? 'ops@portsshipping.com'}</a>.
+                For any queries, contact our operations team at <a href="mailto:${process.env.FROM_EMAIL ?? 'bkg@ports-shipping.com'}" style="color:#8B0000;">${process.env.FROM_EMAIL ?? 'bkg@ports-shipping.com'}</a>.
               </p>
             </td>
           </tr>
@@ -254,9 +258,9 @@ export async function sendBookingConfirmation(
     return;
   }
 
-  const fromEmail = process.env.FROM_EMAIL ?? 'noreply@portsshipping.com';
-  const fromName = process.env.FROM_NAME ?? 'Ports Shipping LLC';
-  const adminEmail = process.env.ADMIN_EMAIL;
+  const fromEmail = process.env.FROM_EMAIL ?? process.env.SMTP_USER ?? 'bkg@ports-shipping.com';
+  const fromName = process.env.FROM_NAME ?? 'Ports Shipping Booking Desk';
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'bkg@ports-shipping.com';
 
   const subject = `Booking Confirmed [${booking.confirmationNumber}] - Token: ${booking.token ?? 'N/A'} | Ports Shipping LLC`;
   const htmlBody = buildEmailHtml(booking, containers, voyageRef);

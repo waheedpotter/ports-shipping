@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, FileText, Menu, X, ChevronDown, CalendarCheck, ShieldCheck } from 'lucide-react';
+import { Search, FileText, Menu, X, ChevronDown, CalendarCheck } from 'lucide-react';
 import { NAV_LINKS, MEGA_MENU_DATA } from '@/data/navigation';
 import MegaMenu from './MegaMenu';
 import TrackModal from '../modals/TrackModal';
@@ -72,36 +72,28 @@ export default function Navbar() {
             </nav>
 
             {/* Action Buttons */}
-            <div className="hidden lg:flex items-center space-x-3">
+            <div className="hidden lg:flex items-center space-x-4">
               <button
                 onClick={() => setIsTrackOpen(true)}
-                className="flex items-center px-3.5 py-2 text-sm font-medium text-crimson-800 border-2 border-crimson-800 rounded-md hover:bg-crimson-50 transition-colors"
+                className="flex items-center px-4 py-2 text-sm font-medium text-crimson-800 border-2 border-crimson-800 rounded-md hover:bg-crimson-50 transition-colors"
               >
-                <Search className="w-4 h-4 mr-1.5" />
+                <Search className="w-4 h-4 mr-2" />
                 Track Shipment
               </button>
               <Link
                 href="/book-slot"
-                className="flex items-center px-3.5 py-2 text-sm font-bold text-white bg-[#C9A84C] rounded-md hover:bg-[#b8942e] transition-colors shadow-md hover:shadow-lg border border-[#b8942e]"
+                className="flex items-center px-4 py-2 text-sm font-bold text-white bg-[#C9A84C] rounded-md hover:bg-[#b8942e] transition-colors shadow-md hover:shadow-lg border border-[#b8942e]"
               >
-                <CalendarCheck className="w-4 h-4 mr-1.5" />
+                <CalendarCheck className="w-4 h-4 mr-2" />
                 Book Slot
               </Link>
               <button
                 onClick={() => setIsQuoteOpen(true)}
-                className="flex items-center px-3.5 py-2 text-sm font-medium text-white bg-crimson-800 rounded-md hover:bg-crimson-900 transition-colors shadow-md hover:shadow-lg"
+                className="flex items-center px-4 py-2 text-sm font-medium text-white bg-crimson-800 rounded-md hover:bg-crimson-900 transition-colors shadow-md hover:shadow-lg"
               >
-                <FileText className="w-4 h-4 mr-1.5" />
+                <FileText className="w-4 h-4 mr-2" />
                 Get Quote
               </button>
-              <Link
-                href="/admin"
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-crimson-800 border border-gray-200 rounded-md hover:border-crimson-800 hover:bg-gray-50 transition-colors"
-                title="Admin Portal"
-              >
-                <ShieldCheck className="w-4 h-4 mr-1 text-crimson-800" />
-                Admin
-              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -169,14 +161,6 @@ export default function Navbar() {
                   <FileText className="w-5 h-5 mr-2" />
                   Get Quote
                 </button>
-                <Link
-                  href="/admin"
-                  onClick={() => setIsMobileOpen(false)}
-                  className="flex justify-center items-center px-4 py-3 text-gray-800 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
-                >
-                  <ShieldCheck className="w-5 h-5 mr-2 text-crimson-800" />
-                  Admin
-                </Link>
               </div>
             </div>
           </motion.div>
