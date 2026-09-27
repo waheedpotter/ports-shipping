@@ -38,7 +38,7 @@ export default function TrackSection() {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="relative mb-12">
+          <form onSubmit={handleSubmit} className="relative">
             <input
               type="text"
               value={query}
@@ -54,21 +54,6 @@ export default function TrackSection() {
               <Search size={20} /> <span className="hidden md:inline">Track</span>
             </button>
           </form>
-
-          <div className="text-white/80">
-            <p className="mb-4 text-sm font-medium uppercase tracking-wider">Try Demo Statuses:</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {['PSDUBAI1001', 'PSDUBAI1002', 'PSDUBAI1003', 'PSDUBAI1004'].map(demo => (
-                <button
-                  key={demo}
-                  onClick={() => router.push(`/track?q=${demo}`)}
-                  className="px-4 py-2 border border-white/30 rounded-md text-sm hover:bg-white/10 transition-colors"
-                >
-                  {demo}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </section>
